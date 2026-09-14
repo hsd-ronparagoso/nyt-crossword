@@ -3,171 +3,414 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Today's Crossword, Unstuck — UnscrambleX</title>
+<title>UnscrambleX — Your Daily Word Challenge</title>
+<meta name="description" content="Crack today's word, keep your streak alive, and play a whole arcade of word games — Blitz, Letter Rush, Word Scramble and more. Free, no sign-in.">
+<meta name="theme-color" content="#0E1512">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div style="min-height: 100%; background: #F6F2E8; color: #1A1A17; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 0 20px 0; position: relative; overflow: hidden;">
+<a class="skip-link" href="#main">Skip to content</a>
 
-  <div id="floaters" style="position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.62;">
-    <div style="position: absolute; left: 4%; top: 7%; width: 46px; height: 51.52px; display: flex; align-items: center; justify-content: center; border-radius: 9.2px; background: #E7DFCC; border: 1px solid #DFD6C1; color: #147860; font-family: 'DM Mono', monospace; font-size: 21.16px; --r: -9deg; animation: floaty 7s ease-in-out 0s infinite; transform: rotate(-9deg);">A</div>
-    <div style="position: absolute; left: 86%; top: 12%; width: 38px; height: 42.56px; display: flex; align-items: center; justify-content: center; border-radius: 7.6px; background: #EFE9DA; border: 1px solid #DFD6C1; color: #B8B09C; font-family: 'DM Mono', monospace; font-size: 17.48px; --r: 11deg; animation: floaty 8s ease-in-out 1.2s infinite; transform: rotate(11deg);">E</div>
-    <div style="position: absolute; left: 10%; top: 34%; width: 32px; height: 35.84px; display: flex; align-items: center; justify-content: center; border-radius: 6.4px; background: #EFE9DA; border: 1px solid #DFD6C1; color: #B8B09C; font-family: 'DM Mono', monospace; font-size: 14.72px; --r: 7deg; animation: floaty 9s ease-in-out 2.1s infinite; transform: rotate(7deg);">S</div>
-    <div style="position: absolute; left: 89%; top: 40%; width: 44px; height: 49.28px; display: flex; align-items: center; justify-content: center; border-radius: 8.8px; background: #E7DFCC; border: 1px solid #DFD6C1; color: #B8B09C; font-family: 'DM Mono', monospace; font-size: 20.24px; --r: -13deg; animation: floaty 7s ease-in-out 0.6s infinite; transform: rotate(-13deg);">R</div>
-    <div style="position: absolute; left: 3%; top: 62%; width: 36px; height: 40.32px; display: flex; align-items: center; justify-content: center; border-radius: 7.2px; background: #EFE9DA; border: 1px solid #DFD6C1; color: #147860; font-family: 'DM Mono', monospace; font-size: 16.56px; --r: 14deg; animation: floaty 10s ease-in-out 1.7s infinite; transform: rotate(14deg);">T</div>
-    <div style="position: absolute; left: 91%; top: 70%; width: 30px; height: 33.6px; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: #E7DFCC; border: 1px solid #DFD6C1; color: #B8B09C; font-family: 'DM Mono', monospace; font-size: 13.8px; --r: -6deg; animation: floaty 8s ease-in-out 2.6s infinite; transform: rotate(-6deg);">N</div>
-    <div style="position: absolute; left: 8%; top: 86%; width: 40px; height: 44.8px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #EFE9DA; border: 1px solid #DFD6C1; color: #B8B09C; font-family: 'DM Mono', monospace; font-size: 18.4px; --r: -11deg; animation: floaty 9s ease-in-out 0.9s infinite; transform: rotate(-11deg);">O</div>
-    <div style="position: absolute; left: 84%; top: 90%; width: 34px; height: 38.08px; display: flex; align-items: center; justify-content: center; border-radius: 6.8px; background: #E7DFCC; border: 1px solid #DFD6C1; color: #147860; font-family: 'DM Mono', monospace; font-size: 15.64px; --r: 9deg; animation: floaty 10s ease-in-out 2.3s infinite; transform: rotate(9deg);">L</div>
-  </div>
-
-  <header style="width: 100%; max-width: 900px; display: flex; align-items: center; justify-content: space-between; padding: 18px 0 8px; position: relative; z-index: 1;">
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <img src="images/logo.png" alt="UnscrambleX" style="width: 28px; height: 28px; border-radius: 7px; display: block;">
-      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.02em;">UnscrambleX</span>
-    </div>
-    <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #6E6A5E;">Free · No paywall</span>
-  </header>
-
-  <main style="width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: clamp(26px, 6vw, 64px) 0 8px; position: relative; z-index: 1;">
-    <div style="display: inline-flex; align-items: center; gap: 8px; background: #ECE5D5; border: 1px solid #DED5C0; border-radius: 999px; padding: 6px 12px 6px 8px;">
-      <span style="width: 7px; height: 7px; border-radius: 50%; background: #147860; display: block;"></span>
-      <span style="font-family: 'DM Mono', monospace; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: #4A463C;">Tue, Sep 1 · The Crossword</span>
-    </div>
-
-    <h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(40px, 7vw, 66px); line-height: 1.02; letter-spacing: -0.035em; margin: 4px 0 0; text-wrap: balance;">Today's crossword, unstuck.</h1>
-
-    <p style="margin: 0; font-size: clamp(16.5px, 1.6vw, 19px); line-height: 1.5; color: #565245; max-width: 420px; text-wrap: pretty;">Every clue, every answer for today's puzzle — plus gentle hints if you'd rather keep your streak honest.</p>
-
-    <a href="https://word.tips/todays-nyt-the-crossword-clues-answers-hints/" target="_blank" rel="noopener" class="cta-link" style="width: 100%; max-width: 340px; min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #147860; color: #FFFDF7; border-radius: 14px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; box-shadow: 0 3px 0 #0C5544; margin-top: 6px;">
-      <span style="color: #FFFDF7;">Get today's answers</span>
-      <span style="font-family: 'DM Mono', monospace; font-size: 15px; color: #FFFDF7;">→</span>
+<header class="site-header" id="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href="#hero">
+      <img src="images/logo.png" alt="" width="30" height="30" class="brand__mark">
+      <span class="brand__name">UnscrambleX</span>
     </a>
-    <span style="font-family: 'DM Mono', monospace; font-size: 11.5px; color: #85806F; letter-spacing: 0.03em;">Updated 10:02 PM ET · takes 3 seconds</span>
-  </main>
-
-  <section style="width: 100%; max-width: 560px; background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 18px; padding: 16px 16px 14px; margin-top: 24px; position: relative; z-index: 1; box-shadow: 0 1px 0 #E9E1CE;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-      <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #85806F;">Peek at three</span>
-      <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #85806F;">Tap to reveal</span>
+    <nav class="nav" aria-label="Primary">
+      <a href="#play"><i class="ph-bold ph-game-controller"></i> Play</a>
+      <a href="#mini-games"><i class="ph-bold ph-lightning"></i> Mini Games</a>
+      <a href="#daily"><i class="ph-bold ph-calendar-check"></i> Daily</a>
+      <a href="#stats"><i class="ph-bold ph-chart-bar"></i> Stats</a>
+      <a href="#achievements"><i class="ph-bold ph-trophy"></i> Achievements</a>
+    </nav>
+    <div class="header-stats">
+      <span class="chip chip--streak" data-streak-chip><i class="ph-fill ph-fire"></i> <span data-streak-val>0</span></span>
+      <span class="chip chip--xp" data-xp-chip><i class="ph-fill ph-sparkle"></i> <span data-xp-val>0</span> XP</span>
+      <span class="chip chip--level" data-level-chip title="Your level"><span data-level-val>1</span></span>
     </div>
-    <div id="teasers" style="display: flex; flex-direction: column; gap: 10px;">
-      <button type="button" class="teaser-row" data-answer="ACTAS" style="all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: center; text-align: left; padding: 8px; border-radius: 12px; box-sizing: border-box;">
-        <span style="font-family: 'DM Mono', monospace; font-size: 12px; color: #85806F;">1A</span>
-        <span style="display: flex; flex-direction: column; gap: 8px;">
-          <span style="font-size: 15px; line-height: 1.3; color: #1A1A17; font-weight: 500;">Fill the role of</span>
-          <span class="teaser-letters">
-            <span class="tile">?</span><span class="tile">?</span><span class="tile">?</span><span class="tile">?</span><span class="tile">?</span>
-          </span>
-        </span>
-      </button>
-      <button type="button" class="teaser-row" data-answer="TOLD" style="all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: center; text-align: left; padding: 8px; border-radius: 12px; box-sizing: border-box;">
-        <span style="font-family: 'DM Mono', monospace; font-size: 12px; color: #85806F;">6A</span>
-        <span style="display: flex; flex-direction: column; gap: 8px;">
-          <span style="font-size: 15px; line-height: 1.3; color: #1A1A17; font-weight: 500;">Informed</span>
-          <span class="teaser-letters">
-            <span class="tile">?</span><span class="tile">?</span><span class="tile">?</span><span class="tile">?</span>
-          </span>
-        </span>
-      </button>
-      <button type="button" class="teaser-row" data-answer="NILE" style="all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: center; text-align: left; padding: 8px; border-radius: 12px; box-sizing: border-box;">
-        <span style="font-family: 'DM Mono', monospace; font-size: 12px; color: #85806F;">10A</span>
-        <span style="display: flex; flex-direction: column; gap: 8px;">
-          <span style="font-size: 15px; line-height: 1.3; color: #1A1A17; font-weight: 500;">River in which baby Moses was found</span>
-          <span class="teaser-letters">
-            <span class="tile">?</span><span class="tile">?</span><span class="tile">?</span><span class="tile">?</span>
-          </span>
-        </span>
-      </button>
-    </div>
-    <a href="https://word.tips/todays-nyt-the-crossword-clues-answers-hints/" target="_blank" rel="noopener" style="display: block; text-align: center; margin-top: 12px; padding: 12px; border-radius: 12px; background: #F1EADA; font-size: 14.5px; font-weight: 700; color: #147860;">See all 76 clues &amp; answers</a>
-  </section>
-
-  <div style="width: 100%; max-width: 560px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; position: relative; z-index: 1;">
-    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: #565245; background: #EFE9DA; border-radius: 999px; padding: 6px 11px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #C08A2E; display: block;"></span>No paywall</span>
-    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: #565245; background: #EFE9DA; border-radius: 999px; padding: 6px 11px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #C08A2E; display: block;"></span>No sign-in</span>
-    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: #565245; background: #EFE9DA; border-radius: 999px; padding: 6px 11px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #C08A2E; display: block;"></span>Hints before answers</span>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="mobile-panel" aria-label="Open menu">
+      <i class="ph-bold ph-list"></i>
+    </button>
   </div>
+  <div class="mobile-panel" id="mobile-panel">
+    <a href="#play">Play</a>
+    <a href="#mini-games">Mini Games</a>
+    <a href="#daily">Daily Challenge</a>
+    <a href="#stats">Letter Stats</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#tools">Word Tools</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</header>
 
-  <section style="width: 100%; max-width: 900px; margin-top: clamp(34px, 5vw, 64px); position: relative; z-index: 1;">
-    <h2 style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.01em; margin: 0 0 12px; text-align: center; color: #4A463C;">Also solved today</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
-      <a href="https://word.tips/todays-wordle-answer/" target="_blank" rel="noopener" class="game-card" style="display: flex; flex-direction: column; gap: 4px; background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; padding: 14px; min-height: 84px; justify-content: center;">
-        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: #1A1A17; letter-spacing: -0.02em;">Wordle</span>
-        <span style="font-size: 12.5px; color: #7C7768;">Today's answer + 3 hints</span>
-      </a>
-      <a href="https://word.tips/connections-hints-today/" target="_blank" rel="noopener" class="game-card" style="display: flex; flex-direction: column; gap: 4px; background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; padding: 14px; min-height: 84px; justify-content: center;">
-        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: #1A1A17; letter-spacing: -0.02em;">Connections</span>
-        <span style="font-size: 12.5px; color: #7C7768;">All four groups</span>
-      </a>
-      <a href="https://word.tips/todays-nyt-strands-hints-spangram-answers/" target="_blank" rel="noopener" class="game-card" style="display: flex; flex-direction: column; gap: 4px; background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; padding: 14px; min-height: 84px; justify-content: center;">
-        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: #1A1A17; letter-spacing: -0.02em;">Strands</span>
-        <span style="font-size: 12.5px; color: #7C7768;">Spangram, spoiler-free</span>
-      </a>
-      <a href="https://word.tips/todays-nyt-mini-crossword-clues-answers/" target="_blank" rel="noopener" class="game-card" style="display: flex; flex-direction: column; gap: 4px; background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; padding: 14px; min-height: 84px; justify-content: center;">
-        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: #1A1A17; letter-spacing: -0.02em;">Mini Crossword</span>
-        <span style="font-size: 12.5px; color: #7C7768;">Full grid in seconds</span>
-      </a>
+<nav class="bottom-nav" aria-label="Quick play">
+  <a href="#daily"><i class="ph-fill ph-calendar-check"></i><span>Daily</span></a>
+  <a href="#play"><i class="ph-fill ph-game-controller"></i><span>Play</span></a>
+  <a href="#mini-games" class="bottom-nav__primary"><i class="ph-fill ph-lightning"></i><span>Games</span></a>
+  <a href="#journey"><i class="ph-fill ph-fire"></i><span>Streak</span></a>
+  <a href="#achievements"><i class="ph-fill ph-trophy"></i><span>Awards</span></a>
+</nav>
+
+<main id="main">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="hero">
+    <div class="hero-media" aria-hidden="true">
+      <video class="hero-video" data-hero-video autoplay muted loop playsinline preload="none" poster="assets/img/hero-poster.jpg">
+        <source src="assets/video/hero-tiles-720.mp4" media="(min-width: 720px)" type="video/mp4">
+        <source src="assets/video/hero-tiles-360.mp4" type="video/mp4">
+      </video>
+      <img class="hero-fallback" src="assets/img/hero-poster.jpg" alt="">
+      <div class="hero-scrim"></div>
+      <div class="hero-particles" data-particles></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="badge-pill" data-today-badge><span class="dot"></span> Today's word game</span>
+        <h1 class="hero-title">Can you crack today's word before the board runs out?</h1>
+        <p class="hero-sub">A new five-letter puzzle drops every midnight. Guess it, guard your streak, and unlock a whole arcade of word games while you're at it.</p>
+        <div class="hero-cta">
+          <button type="button" class="btn btn--primary btn--lg" data-play="daily">
+            <i class="ph-fill ph-play"></i> Play Today's Word
+          </button>
+          <a href="#mini-games" class="btn btn--ghost-light btn--lg">
+            <i class="ph-bold ph-lightning"></i> Explore Mini Games
+          </a>
+        </div>
+        <div class="hero-stats" data-hero-stats>
+          <div class="hero-stat">
+            <span class="hero-stat__value"><i class="ph-fill ph-fire"></i> <span data-hs-streak>0</span></span>
+            <span class="hero-stat__label">Day streak</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__value">Lv. <span data-hs-level>1</span></span>
+            <span class="hero-stat__label">Your level</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__value"><span data-hs-solved>0</span></span>
+            <span class="hero-stat__label">Words solved</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-board-wrap">
+        <div class="hero-board" data-hero-board aria-hidden="true"></div>
+        <p class="hero-board__caption">Watching a demo solve — tap Play to try it yourself</p>
+      </div>
+    </div>
+    <a href="#daily" class="scroll-cue" aria-label="Scroll to today's challenge"><i class="ph-bold ph-caret-down"></i></a>
+  </section>
+
+  <!-- ================= DAILY CHALLENGE ================= -->
+  <section class="section section--daily" id="daily">
+    <div class="container">
+      <div class="daily-card reveal-on-scroll">
+        <div class="daily-card__main">
+          <span class="eyebrow">Today's Challenge</span>
+          <h2 class="daily-card__title" data-daily-number>UnscrambleX #0001</h2>
+          <div class="daily-card__meta">
+            <span class="stars" data-daily-stars aria-hidden="true"></span>
+            <span data-daily-diff>Medium</span>
+          </div>
+          <p class="daily-card__desc">One word. Six tries. Everyone on Earth gets the exact same puzzle today — did you get it yet?</p>
+          <div class="daily-card__facts">
+            <div><i class="ph-bold ph-clock"></i> <span data-daily-time">~2 min</span></div>
+            <div><i class="ph-bold ph-fire"></i> <span data-daily-streaktext>No streak yet</span></div>
+          </div>
+          <button type="button" class="btn btn--primary btn--lg" data-play="daily" data-daily-cta>
+            <i class="ph-fill ph-play"></i> Play Today
+          </button>
+        </div>
+        <div class="daily-card__side">
+          <span class="eyebrow eyebrow--light">Next puzzle in</span>
+          <div class="countdown" data-countdown>
+            <div><span data-c-h>00</span><small>hrs</small></div>
+            <div><span data-c-m>00</span><small>min</small></div>
+            <div><span data-c-s>00</span><small>sec</small></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section style="width: 100%; max-width: 900px; margin-top: clamp(34px, 5vw, 64px); position: relative; z-index: 1;">
-    <h2 style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; margin: 0 0 12px; text-align: center; color: #4A463C;">Questions solvers ask</h2>
-    <div id="faqs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: start; gap: 8px;">
-      <div class="faq-item" style="background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; overflow: hidden;">
-        <button type="button" class="faq-toggle" style="all: unset; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 14px 16px; box-sizing: border-box; min-height: 48px;">
-          <span style="font-size: 14.5px; font-weight: 500; color: #1A1A17; line-height: 1.35;">Is it really free?</span>
-          <span class="faq-sign" style="font-family: 'DM Mono', monospace; font-size: 16px; color: #147860; flex-shrink: 0;">–</span>
-        </button>
-        <p class="faq-answer" style="margin: 0; padding: 0 16px 15px; font-size: 14px; line-height: 1.55; color: #565245; text-wrap: pretty;">Yes — every clue and answer is free to read, no account and no paywall. We keep the lights on with ads, not subscriptions.</p>
+  <!-- ================= MORE WAYS TO PLAY ================= -->
+  <section class="section" id="play">
+    <div class="container">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">More Ways to Play</span>
+        <h2>One board. A whole arcade.</h2>
+        <p>The daily grid is just the start — jump into a practice round or a completely different word game any time.</p>
       </div>
-      <div class="faq-item" style="background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; overflow: hidden;">
-        <button type="button" class="faq-toggle" style="all: unset; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 14px 16px; box-sizing: border-box; min-height: 48px;">
-          <span style="font-size: 14.5px; font-weight: 500; color: #1A1A17; line-height: 1.35;">Will this ruin my streak?</span>
-          <span class="faq-sign" style="font-family: 'DM Mono', monospace; font-size: 16px; color: #147860; flex-shrink: 0;">+</span>
-        </button>
-        <p class="faq-answer" style="display: none; margin: 0; padding: 0 16px 15px; font-size: 14px; line-height: 1.55; color: #565245; text-wrap: pretty;">Only if you want it to. Each clue has a soft hint before the answer, so you can nudge yourself forward and still finish the grid on your own.</p>
-      </div>
-      <div class="faq-item" style="background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; overflow: hidden;">
-        <button type="button" class="faq-toggle" style="all: unset; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 14px 16px; box-sizing: border-box; min-height: 48px;">
-          <span style="font-size: 14.5px; font-weight: 500; color: #1A1A17; line-height: 1.35;">When does today's puzzle go up?</span>
-          <span class="faq-sign" style="font-family: 'DM Mono', monospace; font-size: 16px; color: #147860; flex-shrink: 0;">+</span>
-        </button>
-        <p class="faq-answer" style="display: none; margin: 0; padding: 0 16px 15px; font-size: 14px; line-height: 1.55; color: #565245; text-wrap: pretty;">Weekday and Saturday grids land at 10 p.m. ET the night before; Sunday arrives at 6 p.m. ET on Saturday. Our page updates minutes later.</p>
-      </div>
-      <div class="faq-item" style="background: #FFFDF7; border: 1px solid #E3DAC5; border-radius: 14px; overflow: hidden;">
-        <button type="button" class="faq-toggle" style="all: unset; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 14px 16px; box-sizing: border-box; min-height: 48px;">
-          <span style="font-size: 14.5px; font-weight: 500; color: #1A1A17; line-height: 1.35;">Are you connected to the puzzle's publisher?</span>
-          <span class="faq-sign" style="font-family: 'DM Mono', monospace; font-size: 16px; color: #147860; flex-shrink: 0;">+</span>
-        </button>
-        <p class="faq-answer" style="display: none; margin: 0; padding: 0 16px 15px; font-size: 14px; line-height: 1.55; color: #565245; text-wrap: pretty;">No. We're an independent solving aid built by word-game players. All trademarks belong to their owners.</p>
+      <div class="game-grid reveal-on-scroll">
+        <article class="game-card">
+          <div class="game-card__icon"><i class="ph-fill ph-calendar-check"></i></div>
+          <h3>Daily Word</h3>
+          <p>The main event — one shared puzzle, six tries, a new word at midnight.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 160 XP</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="daily">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card">
+          <div class="game-card__icon"><i class="ph-fill ph-arrows-clockwise"></i></div>
+          <h3>Six Tries</h3>
+          <p>The classic Wordle-style format, unlimited practice — a fresh word every round.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 100 XP</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="six-tries">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card">
+          <div class="game-card__icon"><i class="ph-fill ph-grid-nine"></i></div>
+          <h3>Mini Crossword</h3>
+          <p>Five quick clues, one satisfying little grid. Type them out or peek if you're stuck.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★☆☆☆</span><span><i class="ph-bold ph-clock"></i> 3 min</span><span><i class="ph-bold ph-sparkle"></i> up to 75 XP</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="mini-crossword">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card">
+          <div class="game-card__icon"><i class="ph-fill ph-magnifying-glass"></i></div>
+          <h3>Guess the Word</h3>
+          <p>Clues unlock one at a time. The fewer you need, the bigger the reward.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 1 min</span><span><i class="ph-bold ph-sparkle"></i> up to 100 XP</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="guess-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
       </div>
     </div>
   </section>
 
-  <section style="width: 100%; max-width: 420px; margin-top: clamp(34px, 5vw, 64px); text-align: center; position: relative; z-index: 1;">
-    <a href="https://word.tips/todays-nyt-the-crossword-clues-answers-hints/" target="_blank" rel="noopener" class="finish-link" style="width: 100%; min-height: 56px; display: flex; align-items: center; justify-content: center; background: #1A1A17; color: #FFFDF7; border-radius: 14px; font-size: 16.5px; font-weight: 700;">
-      <span style="color: #FFFDF7;">Finish the grid →</span>
-    </a>
+  <!-- ================= MINI GAMES ================= -->
+  <section class="section section--tinted" id="mini-games">
+    <div class="container">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Mini Games</span>
+        <h2>Got sixty seconds? Good.</h2>
+        <p>Fast, arcade-flavored word games for whenever you want a quick hit of letters.</p>
+      </div>
+      <div class="game-grid game-grid--mini reveal-on-scroll">
+        <article class="game-card game-card--mini game-card--blitz">
+          <div class="game-card__icon"><i class="ph-fill ph-timer"></i></div>
+          <h3>Blitz</h3>
+          <p>Unscramble as many words as you can before the 60-second clock runs out.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★★☆</span><span><i class="ph-bold ph-clock"></i> 60 sec</span><span><i class="ph-bold ph-sparkle"></i> +15 XP / word</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="blitz">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card game-card--mini game-card--speed">
+          <div class="game-card__icon"><i class="ph-fill ph-lightning"></i></div>
+          <h3>Speed Word</h3>
+          <p>Solve before the countdown hits zero — three lives, then it's game over.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★★★</span><span><i class="ph-bold ph-clock"></i> 12 sec / word</span><span><i class="ph-bold ph-sparkle"></i> +20 XP / word</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="speed-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card game-card--mini game-card--scramble">
+          <div class="game-card__icon"><i class="ph-fill ph-shuffle"></i></div>
+          <h3>Word Scramble</h3>
+          <p>Tap the jumbled letters back into order across five relaxed rounds.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★☆☆☆</span><span><i class="ph-bold ph-clock"></i> 3 min</span><span><i class="ph-bold ph-sparkle"></i> +20 XP / word</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="word-scramble">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+        <article class="game-card game-card--mini game-card--rush">
+          <div class="game-card__icon"><i class="ph-fill ph-brain"></i></div>
+          <h3>Letter Rush</h3>
+          <p>One pool of letters, ninety seconds — find every word hiding inside it.</p>
+          <div class="game-card__meta"><span class="stars stars--sm">★★★★☆</span><span><i class="ph-bold ph-clock"></i> 90 sec</span><span><i class="ph-bold ph-sparkle"></i> +4 XP / letter</span></div>
+          <button type="button" class="btn btn--primary btn--block" data-play="letter-rush">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+        </article>
+      </div>
+    </div>
   </section>
 
-  <footer style="width: 100%; max-width: 900px; margin-top: clamp(40px, 6vw, 72px); padding: 22px 0 40px; border-top: 1px solid #E3DAC5; position: relative; z-index: 1;">
-    <div style="display: flex; flex-wrap: wrap; gap: 8px 14px; justify-content: center;">
-      <a href="https://word.tips/five-letter-words/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">5 letter words</a>
-      <a href="https://word.tips/words-with-letters/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Words with these letters</a>
-      <a href="https://word.tips/words-start-with/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Words that start with</a>
-      <a href="https://word.tips/words-end-in/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Words ending in</a>
-      <a href="https://word.tips/crossword-solver/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Crossword solver</a>
-      <a href="https://word.tips/anagram-solver/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Anagram solver</a>
-      <a href="https://word.tips/unscramble-word-finder/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Word unscrambler</a>
-      <a href="https://word.tips/crossword-popular-clues/" target="_blank" rel="noopener" class="footer-link" style="font-size: 12.5px; color: #6E6A5E;">Popular crossword clues</a>
-    </div>
-    <p style="margin: 18px 0 0; text-align: center; font-size: 11.5px; line-height: 1.5; color: #8B8676; text-wrap: pretty;">UnscrambleX is an independent solving aid. Not affiliated with, endorsed by, or connected to The New York Times Company.</p>
-  </footer>
-</div>
+  <!-- ================= YOUR WORD JOURNEY ================= -->
+  <section class="section" id="journey">
+    <div class="container">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Your Word Journey</span>
+        <h2>Progress that actually sticks around.</h2>
+        <p>Everything here lives in this browser — play a round and watch it move.</p>
+      </div>
 
-<script src="script.js"></script>
+      <div class="journey-panel reveal-on-scroll">
+        <div class="journey-level">
+          <div class="xp-ring" data-xp-ring style="--pct:0">
+            <span class="xp-ring__level">Lv <span data-ring-level>1</span></span>
+          </div>
+          <div class="journey-level__text">
+            <div class="xp-bar"><div class="xp-bar__fill" data-xp-bar-fill></div></div>
+            <span class="journey-level__caption"><span data-xp-into>0</span> / <span data-xp-need>100</span> XP to next level</span>
+          </div>
+        </div>
+        <div class="journey-tiles">
+          <div class="journey-tile"><i class="ph-fill ph-fire"></i><strong data-jt-streak>0</strong><span>Current streak</span></div>
+          <div class="journey-tile"><i class="ph-bold ph-trophy"></i><strong data-jt-best>0</strong><span>Best streak</span></div>
+          <div class="journey-tile"><i class="ph-bold ph-check-circle"></i><strong data-jt-games>0</strong><span>Games played</span></div>
+          <div class="journey-tile"><i class="ph-bold ph-text-aa"></i><strong data-jt-words>0</strong><span>Words solved</span></div>
+          <div class="journey-tile"><i class="ph-bold ph-percent"></i><strong data-jt-accuracy>—</strong><span>Letter accuracy</span></div>
+        </div>
+      </div>
+
+      <div class="achievements" id="achievements">
+        <h3 class="achievements__title">Achievements</h3>
+        <div class="achievements__grid" data-achievements></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LETTER INTELLIGENCE ================= -->
+  <section class="section section--tinted" id="stats">
+    <div class="container">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Letter Intelligence</span>
+        <h2>Most common letters in five-letter words.</h2>
+        <p>Real numbers pulled from the 14,855-word dictionary this site plays with — useful for your next opening guess.</p>
+      </div>
+      <div class="letter-bars reveal-on-scroll" data-letter-bars></div>
+    </div>
+  </section>
+
+  <!-- ================= WORD REVEAL ================= -->
+  <section class="section" id="reveal">
+    <div class="container container--narrow">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Word Reveal</span>
+        <h2>Just want the answer?</h2>
+        <p>No judgment. Here's today's word, spoiler-protected until you say so.</p>
+      </div>
+      <div class="mystery-card reveal-on-scroll">
+        <div class="mystery-tiles" data-mystery-tiles></div>
+        <p class="mystery-definition" data-mystery-def hidden></p>
+        <div class="mystery-badges" data-mystery-badges hidden></div>
+        <button type="button" class="btn btn--dark btn--lg" data-mystery-btn>
+          <i class="ph-fill ph-eye"></i> Reveal Word
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HINT SYSTEM ================= -->
+  <section class="section section--tinted" id="hints">
+    <div class="container container--narrow">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Hint System</span>
+        <h2>Nudge yourself forward instead.</h2>
+        <p>Spend a little XP to unlock a clue about today's word — cheaper than spoiling the whole thing.</p>
+      </div>
+      <div class="hint-list reveal-on-scroll" data-hint-list></div>
+    </div>
+  </section>
+
+  <!-- ================= WORD TOOLS ================= -->
+  <section class="section" id="tools">
+    <div class="container">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Word Tools</span>
+        <h2>Five-letter word finder.</h2>
+        <p>Unscramble, find anagrams, or filter the dictionary — all client-side, all instant.</p>
+      </div>
+      <div class="tools-panel reveal-on-scroll">
+        <div class="tools-tabs" role="tablist" aria-label="Word tool mode">
+          <button type="button" class="tools-tab is-active" data-tool-tab="unscramble" role="tab" aria-selected="true">Unscramble</button>
+          <button type="button" class="tools-tab" data-tool-tab="anagram" role="tab" aria-selected="false">Anagram</button>
+          <button type="button" class="tools-tab" data-tool-tab="starts" role="tab" aria-selected="false">Starts With</button>
+          <button type="button" class="tools-tab" data-tool-tab="contains" role="tab" aria-selected="false">Contains</button>
+        </div>
+        <form class="tools-form" data-tools-form>
+          <input type="text" class="tools-input" data-tools-input placeholder="Type letters, e.g. RATSE" autocomplete="off" maxlength="9" aria-label="Letters">
+          <button type="submit" class="btn btn--primary">Find Words <i class="ph-bold ph-magnifying-glass"></i></button>
+        </form>
+        <div class="tools-results" data-tools-results aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="section" id="faq">
+    <div class="container container--narrow">
+      <div class="section-head reveal-on-scroll">
+        <span class="eyebrow">Questions Players Ask</span>
+        <h2>Quick answers.</h2>
+      </div>
+      <div class="faq-list reveal-on-scroll" data-faq>
+        <div class="faq-item">
+          <button type="button" class="faq-toggle" aria-expanded="false">
+            <span>Is it really free?</span>
+            <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
+          </button>
+          <p class="faq-answer">Every game, hint and tool on this page is free — no account, no paywall. We keep the lights on with ads, not subscriptions.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-toggle" aria-expanded="false">
+            <span>Where is my progress saved?</span>
+            <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
+          </button>
+          <p class="faq-answer">Right in this browser (localStorage) — no sign-up required. Clearing your browser data or switching devices will start a fresh streak.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-toggle" aria-expanded="false">
+            <span>Will using a hint ruin my streak?</span>
+            <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
+          </button>
+          <p class="faq-answer">Never. Hints only cost a little XP. Your streak just tracks whether you finished the Daily Word, hints or not.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-toggle" aria-expanded="false">
+            <span>When does the new word drop?</span>
+            <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
+          </button>
+          <p class="faq-answer">Right at midnight in your own timezone — the countdown on the Daily Challenge card is always counting down to your next puzzle.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-toggle" aria-expanded="false">
+            <span>Are you affiliated with any other word game?</span>
+            <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
+          </button>
+          <p class="faq-answer">No — UnscrambleX is an independent word-game platform built by puzzle fans. Any resemblance to other games is just love for the genre.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section class="final-cta">
+    <div class="container container--narrow">
+      <h2>One word a day. Zero reasons not to.</h2>
+      <p>Your streak is waiting.</p>
+      <button type="button" class="btn btn--primary btn--lg" data-play="daily">
+        <i class="ph-fill ph-play"></i> Play Today's Word
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <a class="brand" href="#hero">
+        <img src="images/logo.png" alt="" width="26" height="26" class="brand__mark">
+        <span class="brand__name">UnscrambleX</span>
+      </a>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#daily">Daily Challenge</a>
+        <a href="#mini-games">Mini Games</a>
+        <a href="#stats">Letter Stats</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#tools">Word Tools</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+    <p class="site-footer__disclaimer">UnscrambleX is an independent word-game platform. Not affiliated with, endorsed by, or connected to any other puzzle publisher.</p>
+  </div>
+</footer>
+
+<script src="data/game-data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/words.js"></script>
+<script src="js/effects.js"></script>
+<script src="js/wordle-engine.js"></script>
+<script src="js/games.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
