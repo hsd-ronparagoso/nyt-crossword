@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — How to Play system
+   WordArcade — How to Play system
    - A global hub (nav icon) listing every game.
    - A detailed, per-game instructions modal (goal, steps, an
      animated example, scoring, tips, hints) — reopenable any

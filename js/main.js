@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — homepage interactivity
+   WordArcade — homepage interactivity
    ============================================================ */
 (function () {
   "use strict";
@@ -108,7 +108,7 @@
   /* ---------------- Daily card content ---------------- */
   function initDailyCard() {
     var entry = todaysEntry();
-    setText("[data-daily-number]", "UnscrambleX #" + String(puzzleNumber()).padStart(4, "0"));
+    setText("[data-daily-number]", "WordArcade #" + String(puzzleNumber()).padStart(4, "0"));
     setText("[data-daily-diff]", entry.diff);
     setText("[data-daily-time]", diffTime(entry.diff));
     var stars = document.querySelector("[data-daily-stars]");

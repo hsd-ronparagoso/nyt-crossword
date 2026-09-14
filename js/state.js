@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — player state
+   WordArcade — player state
    A tiny persisted store (localStorage) + pub/sub so any part of
    the UI can react when XP, streaks or achievements change.
    ============================================================ */

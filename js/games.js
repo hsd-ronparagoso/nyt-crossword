@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — game modal shell + mini-game engines
+   WordArcade — game modal shell + mini-game engines
    Every "Play" button on the page routes through GameModal.open,
    which hands a clean container to one of the launch functions
    below. Nothing here ever navigates away from the page.
@@ -88,11 +88,19 @@
       (opts.breakdownHtml || "") +
       '<div class="game-result__actions">' +
       (opts.onPlayAgain ? '<button type="button" class="btn btn--primary" data-act="again">Play Again</button>' : "") +
-      '<button type="button" class="btn btn--ghost" data-act="close">Back to Games</button>' +
+      '<button type="button" class="btn btn--ghost" data-act="more">More Games</button>' +
+      '<button type="button" class="btn btn--ghost" data-act="stats"><i class="ph-bold ph-chart-bar"></i> View Stats</button>' +
       "</div>";
     container.appendChild(panel);
     if (opts.onPlayAgain) panel.querySelector('[data-act="again"]').addEventListener("click", opts.onPlayAgain);
-    panel.querySelector('[data-act="close"]').addEventListener("click", closeModal);
+    panel.querySelector('[data-act="more"]').addEventListener("click", function () {
+      closeModal();
+      setTimeout(function () { var el = document.getElementById("play"); if (el) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); }, 260);
+    });
+    panel.querySelector('[data-act="stats"]').addEventListener("click", function () {
+      closeModal();
+      setTimeout(function () { var el = document.getElementById("journey"); if (el) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); }, 260);
+    });
     var speakBtn = panel.querySelector("[data-speak]");
     if (speakBtn) {
       if ("speechSynthesis" in window) {
@@ -342,8 +350,10 @@
     var roundIndex = 0;
     var solved = 0;
     var totalXp = 0;
+    var combo = 0;
     var lives = mode === "speed" ? 3 : Infinity;
     var timeLeft = mode === "blitz" ? 60 : (mode === "speed" ? 12 : null);
+    var urgentAt = mode === "blitz" ? 10 : 4;
     var timerId = null;
     var maxRounds = mode === "scramble" ? 5 : order.length;
 
@@ -372,67 +382,152 @@
     }
 
     function renderRound(item) {
-      var scrambled = shuffleWord(item.word);
-      var slots = new Array(item.word.length).fill(null);
-      var usedSourceIdx = {};
+      // Each pool tile keeps a stable identity ({ch, id, used}) so
+      // shuffling only ever reorders them — it can never desync from
+      // which letters are actually already placed (a real bug the
+      // old position-indexed version had).
+      var poolTiles = shuffleWord(item.word).split("").map(function (ch, i) { return { ch: ch, id: i, used: false }; });
+      var slots = new Array(item.word.length).fill(null); // each: { ch, tileId } | null
       var lengthRevealed = mode !== "scramble"; // only Word Scramble hides length behind a hint
 
       wrap.innerHTML =
         '<div class="scramble-top">' +
         (mode === "scramble" ? '<span class="scramble-progress">Word ' + roundIndex + " / " + maxRounds + "</span>" : '<span class="scramble-progress">Solved: ' + solved + "</span>") +
-        (timeLeft != null ? '<span class="scramble-timer"><i class="ph-fill ph-timer"></i> <span data-time>' + timeLeft + "s</span></span>" : "") +
+        (timeLeft != null ? '<span class="scramble-timer" data-timer-wrap><i class="ph-fill ph-timer"></i> <span data-time>' + timeLeft + "s</span></span>" : "") +
         (mode === "speed" ? '<span class="scramble-lives">' + "❤️".repeat(lives) + "</span>" : "") +
+        (combo >= 2 ? '<span class="combo-chip"><i class="ph-fill ph-fire"></i> x' + comboMultiplier().toFixed(2).replace(/\.?0+$/, "") + " combo</span>" : "") +
         "</div>" +
         '<div class="scramble-cat" data-cat-line>' + item.cat + (lengthRevealed ? " · " + item.word.length + " letters" : "") + "</div>" +
         '<div class="scramble-slots" data-slots></div>' +
         '<div class="scramble-source" data-source></div>' +
         '<div class="scramble-actions">' +
         '  <button type="button" class="btn btn--ghost btn--sm" data-clear>Clear</button>' +
-        '  <button type="button" class="btn btn--ghost btn--sm" data-shuffle>Shuffle</button>' +
+        '  <button type="button" class="btn btn--ghost btn--sm" data-shuffle><i class="ph-bold ph-shuffle"></i> Shuffle</button>' +
         "</div>" +
         '<div data-hint-host></div>';
 
       var slotsEl = wrap.querySelector("[data-slots]");
       var sourceEl = wrap.querySelector("[data-source]");
       var catLine = wrap.querySelector("[data-cat-line]");
+      applyUrgency();
 
       function renderSlots() {
         slotsEl.innerHTML = "";
-        slots.forEach(function (ch) {
+        slots.forEach(function (slot, idx) {
           var d = document.createElement("div");
-          d.className = "scramble-slot" + (ch ? " is-filled" : "");
-          d.textContent = ch || "";
+          d.className = "scramble-slot" + (slot ? " is-filled" : "");
+          d.textContent = slot ? slot.ch : "";
+          d.setAttribute("data-slot-idx", idx);
+          if (slot) {
+            d.title = "Tap to send this letter back";
+            d.addEventListener("click", function () { clearSlot(idx); });
+          }
           slotsEl.appendChild(d);
         });
       }
-      function renderSource(letters) {
+
+      function renderSource() {
         sourceEl.innerHTML = "";
-        letters.split("").forEach(function (ch, i) {
+        poolTiles.forEach(function (tile) {
           var b = document.createElement("button");
           b.type = "button";
-          b.className = "scramble-tile" + (usedSourceIdx[i] ? " is-used" : "");
-          b.textContent = ch;
-          b.disabled = !!usedSourceIdx[i];
-          b.addEventListener("click", function () {
-            var emptyIdx = slots.indexOf(null);
-            if (emptyIdx === -1) return;
-            slots[emptyIdx] = ch;
-            usedSourceIdx[i] = true;
-            renderSlots();
-            renderSource(letters);
-            if (slots.indexOf(null) === -1) checkAnswer(letters);
-          });
+          b.className = "scramble-tile" + (tile.used ? " is-used" : "");
+          b.textContent = tile.ch;
+          b.disabled = tile.used;
+          if (!tile.used) attachDrag(b, tile);
           sourceEl.appendChild(b);
         });
       }
 
+      /* Unified tap + drag-and-drop (Pointer Events cover mouse, touch and pen). */
+      function attachDrag(b, tile) {
+        b.addEventListener("pointerdown", function (e) {
+          if (roundOver || b.disabled) return;
+          e.preventDefault();
+          var startX = e.clientX, startY = e.clientY;
+          var rect = b.getBoundingClientRect();
+          var offX = startX - rect.left, offY = startY - rect.top;
+          var dragging = false;
+          try { b.setPointerCapture(e.pointerId); } catch (err) {}
+
+          function clearTargets() {
+            slotsEl.querySelectorAll(".scramble-slot").forEach(function (s) { s.classList.remove("is-drop-target"); });
+          }
+          function hoveredSlot(x, y) {
+            b.style.pointerEvents = "none";
+            var el = document.elementFromPoint(x, y);
+            b.style.pointerEvents = "";
+            return el && el.closest ? el.closest(".scramble-slot") : null;
+          }
+          function onMove(ev) {
+            var dx = ev.clientX - startX, dy = ev.clientY - startY;
+            if (!dragging && Math.hypot(dx, dy) > 6) {
+              dragging = true;
+              b.classList.add("scramble-tile--dragging");
+              b.style.position = "fixed";
+              b.style.left = rect.left + "px";
+              b.style.top = rect.top + "px";
+              b.style.width = rect.width + "px";
+              b.style.height = rect.height + "px";
+              b.style.zIndex = "80";
+            }
+            if (!dragging) return;
+            b.style.left = (ev.clientX - offX) + "px";
+            b.style.top = (ev.clientY - offY) + "px";
+            clearTargets();
+            var slot = hoveredSlot(ev.clientX, ev.clientY);
+            if (slot && !slot.classList.contains("is-filled")) slot.classList.add("is-drop-target");
+          }
+          function onUp(ev) {
+            document.removeEventListener("pointermove", onMove);
+            document.removeEventListener("pointerup", onUp);
+            document.removeEventListener("pointercancel", onUp);
+            if (!dragging) {
+              placeAt(slots.findIndex(function (s) { return !s; }), tile);
+              return;
+            }
+            b.classList.remove("scramble-tile--dragging");
+            b.style.position = ""; b.style.left = ""; b.style.top = ""; b.style.width = ""; b.style.height = ""; b.style.zIndex = "";
+            clearTargets();
+            var slot = hoveredSlot(ev.clientX, ev.clientY);
+            if (slot && !slot.classList.contains("is-filled")) {
+              placeAt(Number(slot.getAttribute("data-slot-idx")), tile);
+            }
+          }
+          document.addEventListener("pointermove", onMove);
+          document.addEventListener("pointerup", onUp);
+          document.addEventListener("pointercancel", onUp);
+        });
+      }
+
+      function placeAt(slotIdx, tile) {
+        if (slotIdx == null || slotIdx < 0 || slots[slotIdx] || tile.used) return;
+        slots[slotIdx] = { ch: tile.ch, tileId: tile.id };
+        tile.used = true;
+        renderSlots();
+        renderSource();
+        if (slots.every(Boolean)) checkAnswer();
+      }
+
+      function clearSlot(idx) {
+        var s = slots[idx];
+        if (!s || roundOver) return;
+        var tile = poolTiles.filter(function (t) { return t.id === s.tileId; })[0];
+        if (tile) tile.used = false;
+        slots[idx] = null;
+        renderSlots();
+        renderSource();
+      }
+
       var roundOver = false;
-      function checkAnswer(letters) {
-        var guess = slots.join("");
+      function checkAnswer() {
+        var guess = slots.map(function (s) { return s.ch; }).join("");
         if (guess === item.word) {
           roundOver = true;
           solved += 1;
-          var xp = mode === "speed" ? 20 : (mode === "blitz" ? 15 : 20);
+          combo += 1;
+          var base = mode === "speed" ? 20 : (mode === "blitz" ? 15 : 20);
+          var xp = Math.round(base * comboMultiplier());
           totalXp += xp;
           window.PlayerState.addXp(xp, "scramble");
           window.PlayerState.recordWin({ tries: 1, hintsUsed: false });
@@ -443,28 +538,29 @@
             else nextRound();
           }, 550);
         } else {
+          combo = 0;
           slotsEl.classList.add("is-wrong");
           setTimeout(function () {
             slotsEl.classList.remove("is-wrong");
             slots = new Array(item.word.length).fill(null);
-            usedSourceIdx = {};
+            poolTiles.forEach(function (t) { t.used = false; });
             renderSlots();
-            renderSource(letters);
+            renderSource();
           }, 420);
         }
       }
 
       renderSlots();
-      renderSource(scrambled);
+      renderSource();
       wrap.querySelector("[data-clear]").addEventListener("click", function () {
         slots = new Array(item.word.length).fill(null);
-        usedSourceIdx = {};
+        poolTiles.forEach(function (t) { t.used = false; });
         renderSlots();
-        renderSource(scrambled);
+        renderSource();
       });
       wrap.querySelector("[data-shuffle]").addEventListener("click", function () {
-        var again = shuffleWord(item.word);
-        renderSource(again);
+        poolTiles.sort(function () { return Math.random() - 0.5; });
+        renderSource();
       });
 
       var hintPanel = window.HintPanel.create(wrap.querySelector("[data-hint-host]"), {
@@ -529,9 +625,19 @@
       }
     }
 
+    function comboMultiplier() {
+      return 1 + Math.min(combo, 5) * 0.2; // up to 2x at a 5-streak
+    }
+
+    function applyUrgency() {
+      var el = wrap.querySelector("[data-timer-wrap]");
+      if (el) el.classList.toggle("is-urgent", timeLeft != null && timeLeft <= urgentAt);
+    }
+
     function updateTimerDisplay() {
       var el = wrap.querySelector("[data-time]");
       if (el) el.textContent = timeLeft + "s";
+      applyUrgency();
     }
 
     if (mode === "blitz" || mode === "speed") {
@@ -797,11 +903,12 @@
 
     var wrap = document.createElement("div");
     wrap.className = "minicross-game";
-    wrap.innerHTML = '<p class="minicross-intro">Type each answer, or use a hint if you\'re stuck.</p><div class="minicross-list" data-list></div>';
+    wrap.innerHTML = '<p class="minicross-intro">Type each answer, use arrow keys to move around, or use a hint if you\'re stuck.</p><div class="minicross-list" data-list></div>';
     container.appendChild(wrap);
     var list = wrap.querySelector("[data-list]");
+    var rowsMeta = [];
 
-    clues.forEach(function (item) {
+    clues.forEach(function (item, rowIndex) {
       var row = document.createElement("div");
       row.className = "minicross-row";
       var hintButtonsHtml = hintCfg.hints.map(function (h) {
@@ -810,7 +917,7 @@
       row.innerHTML =
         '<div class="minicross-num">' + item.num + "</div>" +
         '<div class="minicross-body">' +
-        '  <div class="minicross-clue" data-clue-text>' + item.clue + "</div>" +
+        '  <div class="minicross-clue" data-clue-text tabindex="0" role="button">' + item.clue + "</div>" +
         '  <div class="minicross-boxes" data-boxes></div>' +
         '  <div class="minicross-hints">' + hintButtonsHtml + "</div>" +
         "</div>";
@@ -832,9 +939,22 @@
         });
         input.addEventListener("keydown", function (e) {
           if (e.key === "Backspace" && !input.value && inputs[i - 1]) inputs[i - 1].focus();
+          else if (e.key === "ArrowLeft" && inputs[i - 1]) { e.preventDefault(); inputs[i - 1].focus(); }
+          else if (e.key === "ArrowRight" && inputs[i + 1]) { e.preventDefault(); inputs[i + 1].focus(); }
+          else if (e.key === "ArrowDown") { e.preventDefault(); focusRow(rowIndex + 1, i); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); focusRow(rowIndex - 1, i); }
+        });
+        input.addEventListener("focusin", function () {
+          list.querySelectorAll(".minicross-row.is-active").forEach(function (r) { r.classList.remove("is-active"); });
+          row.classList.add("is-active");
         });
         inputs.push(input);
         boxesEl.appendChild(input);
+      });
+
+      clueTextEl.addEventListener("click", function () { focusRow(rowIndex, 0); });
+      clueTextEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); focusRow(rowIndex, 0); }
       });
 
       function spend(cost) { window.PlayerState.addXp(-cost, "hint"); }
@@ -899,7 +1019,19 @@
           }
         });
       });
+
+      rowsMeta.push({ row: row, inputs: inputs });
     });
+
+    function focusRow(rowIndex, preferredCol) {
+      if (rowIndex < 0 || rowIndex >= rowsMeta.length) return;
+      var meta = rowsMeta[rowIndex];
+      if (meta.inputs[0] && meta.inputs[0].disabled) { return; } // already solved/revealed
+      var col = Math.min(preferredCol, meta.inputs.length - 1);
+      var firstEmpty = meta.inputs.findIndex(function (inp) { return !inp.value; });
+      var target = meta.inputs[firstEmpty !== -1 ? firstEmpty : col] || meta.inputs[col];
+      if (target) target.focus();
+    }
 
     var finishBar = document.createElement("div");
     finishBar.className = "minicross-finish";

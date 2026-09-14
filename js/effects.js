@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — shared visual effects
+   WordArcade — shared visual effects
    Confetti bursts + achievement toasts. Both respect
    prefers-reduced-motion by skipping/softening motion.
    ============================================================ */
@@ -10,7 +10,7 @@
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  var COLORS = ["#147860", "#e8b93a", "#e0524a", "#3b7fd6", "#f6f2e8"];
+  var COLORS = ["#22C55E", "#FACC15", "#F97316", "#38BDF8", "#8B5CF6", "#EC4899"];
 
   function confetti(originEl) {
     if (prefersReducedMotion()) return;

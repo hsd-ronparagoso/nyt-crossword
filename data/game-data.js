@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — game data
+   WordArcade — game data
    Curated word banks, achievement defs, and real computed stats.
    The full 5-letter valid-guess dictionary (data/valid-words.json,
    14,855 words sourced from the open Wordle word list) is lazy

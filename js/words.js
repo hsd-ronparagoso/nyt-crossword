@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — dictionary loader + word utilities
+   WordArcade — dictionary loader + word utilities
    The 14,855-word valid-guess list is fetched lazily (only once
    a game actually needs it) so the initial page stays light.
    ============================================================ */

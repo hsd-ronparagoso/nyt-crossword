@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — in-game Hint Panel
+   WordArcade — in-game Hint Panel
    A self-contained, reusable "💡 Hints" card. Every game passes
    its own contextual hint list (from data/how-to-play.js) plus a
    `use(hint)` function that performs the actual reveal — this

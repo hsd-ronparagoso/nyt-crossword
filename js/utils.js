@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — tiny shared helpers (difficulty display, etc.)
+   WordArcade — tiny shared helpers (difficulty display, etc.)
    ============================================================ */
 (function () {
   "use strict";

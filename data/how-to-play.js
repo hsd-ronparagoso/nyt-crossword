@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — How to Play + Hints content
+   WordArcade — How to Play + Hints content
    Single source of truth for both the "How to Play" modals and
    the live in-game hint panels, so the two never drift apart.
    Each game's `hints` array lists id/icon/label/desc/cost only —

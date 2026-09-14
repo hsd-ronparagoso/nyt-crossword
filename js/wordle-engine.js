@@ -1,5 +1,5 @@
 /* ============================================================
-   UnscrambleX — reusable Wordle-style board engine
+   WordArcade — reusable Wordle-style board engine
    Renders a board + on-screen keyboard into any container and
    drives guess → score → flip → win/lose, with physical keyboard
    support. Used by Daily Word and Six Tries.
