@@ -615,7 +615,13 @@ button { font: inherit; }
 .game-modal__close, .game-modal__help { background: var(--paper-line-soft); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 15px; color: var(--ink); flex-shrink: 0; transition: background 150ms ease; }
 .game-modal__close:hover, .game-modal__help:hover { background: var(--paper-line); }
 .game-modal__help { color: var(--brand); }
-.game-modal__body { flex: 1 1 auto; min-height: 0; padding: 22px 20px 28px; overflow-y: auto; position: relative; }
+/* min-height overrides the flex default of "auto" (which would
+   otherwise block shrinking below content height and break the
+   scroll-when-too-tall case below) with a real floor instead of 0 —
+   0 collapsed the body to almost nothing whenever its only content
+   was the position:absolute onboarding overlay, since absolutely
+   positioned content contributes no intrinsic height to its parent. */
+.game-modal__body { flex: 1 1 auto; min-height: 280px; padding: 22px 20px 28px; overflow-y: auto; position: relative; }
 
 /* ---------------- Result panel ---------------- */
 .game-result { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 12px 0; }
