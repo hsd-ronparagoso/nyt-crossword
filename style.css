@@ -615,7 +615,7 @@ button { font: inherit; }
 .game-modal__close, .game-modal__help { background: var(--paper-line-soft); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 15px; color: var(--ink); flex-shrink: 0; transition: background 150ms ease; }
 .game-modal__close:hover, .game-modal__help:hover { background: var(--paper-line); }
 .game-modal__help { color: var(--brand); }
-.game-modal__body { padding: 22px 20px 28px; overflow-y: auto; position: relative; }
+.game-modal__body { flex: 1 1 auto; min-height: 0; padding: 22px 20px 28px; overflow-y: auto; position: relative; }
 
 /* ---------------- Result panel ---------------- */
 .game-result { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 12px 0; }
@@ -787,7 +787,7 @@ button { font: inherit; }
 .help-modal__back:hover { background: var(--paper-line-soft); }
 .help-modal__spacer { flex: 1; }
 .help-modal__close { background: var(--paper-line-soft); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 15px; color: var(--ink); }
-.help-modal__body { padding: 20px 22px 30px; overflow-y: auto; }
+.help-modal__body { flex: 1 1 auto; min-height: 0; padding: 20px 22px 30px; overflow-y: auto; }
 
 .htp-hub-intro { display: flex; gap: 12px; align-items: flex-start; background: var(--brand-soft); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 18px; }
 .htp-hub-intro i { color: var(--brand); font-size: 20px; flex-shrink: 0; margin-top: 2px; }
