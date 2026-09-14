@@ -152,7 +152,7 @@
     host.innerHTML =
       '<div class="htp-timer-bar"><div class="htp-timer-bar__fill"></div></div>' +
       '<div class="htp-timer-score">Score: <span data-htp-score>0</span></div>' +
-      '<p class="htp-example__caption">Solve before the bar empties — your score climbs with every word.</p>';
+      '<p class="htp-example__caption">Solve before the bar empties, your score climbs with every word.</p>';
     var fill = host.querySelector(".htp-timer-bar__fill");
     var scoreEl = host.querySelector("[data-htp-score]");
     function play() {
@@ -247,7 +247,7 @@
 
       '<h4 class="htp-section-title"><i class="ph-bold ph-lightbulb"></i> Hints Available</h4>' +
       '<div class="htp-hint-list">' + g.hints.map(function (h) {
-        return '<div class="htp-hint-preview"><i class="ph-bold ' + h.icon + '"></i><span><strong>' + h.label + "</strong> — " + h.desc + '</span><span class="htp-hint-preview__cost">−' + h.cost + (h.unit === "sec" ? "s" : " XP") + "</span></div>";
+        return '<div class="htp-hint-preview"><i class="ph-bold ' + h.icon + '"></i><span><strong>' + h.label + "</strong>, " + h.desc + '</span><span class="htp-hint-preview__cost">−' + h.cost + (h.unit === "sec" ? "s" : " XP") + "</span></div>";
       }).join("") + "</div>" +
 
       '<button type="button" class="btn btn--primary btn--block htp-play-btn" data-play="' + gameId + '"><i class="ph-fill ph-play"></i> Play ' + g.title + "</button>" +
@@ -261,7 +261,7 @@
   /* ---------------- Hub view (all games) ---------------- */
   function renderHub(body) {
     body.innerHTML =
-      '<div class="htp-hub-intro"><i class="ph-fill ph-book-open"></i><p>Pick a game to see exactly how it works — goal, rules, scoring and every hint.</p></div>' +
+      '<div class="htp-hub-intro"><i class="ph-fill ph-book-open"></i><p>Pick a game to see exactly how it works, goal, rules, scoring and every hint.</p></div>' +
       '<div class="htp-hub-grid">' +
       window.HOW_TO_PLAY_ORDER.map(function (id) {
         var g = window.HOW_TO_PLAY[id];

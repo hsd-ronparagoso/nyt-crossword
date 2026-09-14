@@ -260,7 +260,7 @@
             subtitle: "You got <strong>" + entry.word + "</strong> in " + info.tries + " " + (info.tries === 1 ? "try" : "tries") + ".",
             xp: xp,
             statsHtml: howYouDidHtml({
-              accuracy: totalLetters ? Math.round((correctLetters / totalLetters) * 100) + "%" : "—",
+              accuracy: totalLetters ? Math.round((correctLetters / totalLetters) * 100) + "%" : "N/A",
               time: fmtTime(info.timeSec),
               efficiency: info.tries + "/" + info.maxTries,
               hints: hintPanel.usedCount() + "/" + hintCfg.hints.length,
@@ -303,7 +303,7 @@
       wrap.className = "wg-intro";
       wrap.innerHTML =
         '<div class="wg-intro__badge"><i class="ph-fill ph-check-circle"></i> Already completed today</div>' +
-        '<p class="wg-intro__hint">Today\'s word was <strong>' + entry.word + "</strong> — " + entry.def + "</p>" +
+        '<p class="wg-intro__hint">Today\'s word was <strong>' + entry.word + "</strong>, " + entry.def + "</p>" +
         '<p class="wg-intro__hint">Come back after midnight for a new puzzle, or warm up with Six Tries below.</p>';
       container.appendChild(wrap);
       return;
@@ -876,7 +876,7 @@
           subtitle: "The word was <strong>" + entry.word + "</strong>.",
           xp: xp,
           statsHtml: howYouDidHtml({
-            accuracy: "—", time: "—", efficiency: attempts + " guess" + (attempts === 1 ? "" : "es"),
+            accuracy: "N/A", time: "N/A", efficiency: attempts + " guess" + (attempts === 1 ? "" : "es"),
             hints: hintPanel.usedCount() + "/" + hintCfg.hints.length,
           }),
           breakdownHtml: wordBreakdownHtml(entry),
@@ -884,7 +884,7 @@
         });
       } else {
         var fb = wrap.querySelector("[data-feedback]");
-        fb.textContent = "Not quite — try again or reveal a hint.";
+        fb.textContent = "Not quite, try again or reveal a hint.";
         input.value = "";
         input.focus();
       }
@@ -1042,7 +1042,7 @@
         clues.map(function (item) {
           var found = recap.filter(function (r) { return r.num === item.num; })[0];
           var solved = found && found.solvedByPlayer;
-          return '<p><strong>' + item.num + " " + item.answer + "</strong> — " + item.clue + (solved ? "" : " <em>(revealed)</em>") + "</p>";
+          return '<p><strong>' + item.num + " " + item.answer + "</strong>, " + item.clue + (solved ? "" : " <em>(revealed)</em>") + "</p>";
         }).join("") + "</div>";
       resultPanel(container, {
         icon: "ph-trophy",

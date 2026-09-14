@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WordArcade — Your Daily Word Challenge</title>
-<meta name="description" content="Crack today's word, keep your streak alive, and play a whole arcade of word games — Blitz, Letter Rush, Word Scramble and more. Free, no sign-in.">
+<title>WordArcade: Your Daily Word Challenge</title>
+<meta name="description" content="Crack today's word, keep your streak alive, and play a whole arcade of word games: Blitz, Letter Rush, Word Scramble and more. Free, no sign-in.">
 <meta name="theme-color" content="#0E1512">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,7 +78,7 @@
         <img src="assets/img/logo.png" alt="WordArcade" class="hero-logo">
         <span class="badge-pill" data-today-badge><span class="dot"></span> Today's word game</span>
         <h1 class="hero-title">Can you crack today's word before the board runs out?</h1>
-        <p class="hero-sub">A new five-letter puzzle drops every midnight. Guess it, guard your streak, and unlock a whole arcade of word games while you're at it.</p>
+        <p class="hero-sub">A new five-letter puzzle drops every midnight. Guess it, guard your streak, and unlock more games.</p>
         <div class="hero-cta">
           <button type="button" class="btn btn--primary btn--lg" data-play="daily">
             <i class="ph-fill ph-play"></i> Play Today's Word
@@ -88,24 +88,27 @@
           </a>
         </div>
         <div class="hero-stats" data-hero-stats>
-          <div class="hero-stat">
+          <button type="button" class="hero-stat" data-tip="Your current consecutive daily-game streak. Play every day to keep it going.">
             <span class="hero-stat__value"><i class="ph-fill ph-fire"></i> <span data-hs-streak>0</span></span>
             <span class="hero-stat__label">Day streak</span>
-          </div>
-          <div class="hero-stat">
+          </button>
+          <button type="button" class="hero-stat" data-tip="Your WordArcade progression level. Earn XP by playing games and completing challenges.">
             <span class="hero-stat__value">Lv. <span data-hs-level>1</span></span>
             <span class="hero-stat__label">Your level</span>
-          </div>
-          <div class="hero-stat">
+          </button>
+          <button type="button" class="hero-stat" data-tip="The total number of word puzzles you have successfully completed.">
             <span class="hero-stat__value"><span data-hs-solved>0</span></span>
             <span class="hero-stat__label">Words solved</span>
-          </div>
+          </button>
         </div>
       </div>
 
       <div class="hero-board-wrap">
-        <div class="hero-board" data-hero-board aria-hidden="true"></div>
-        <p class="hero-board__caption">Watching a demo solve — tap Play to try it yourself</p>
+        <button type="button" class="hero-board-frame" data-play="daily" aria-label="Play today's word">
+          <div class="hero-board" data-hero-board aria-hidden="true"></div>
+          <span class="hero-board__play"><i class="ph-fill ph-play"></i> Play Now</span>
+        </button>
+        <p class="hero-board__caption">Watching a demo solve. Tap the board to play it yourself.</p>
       </div>
     </div>
     <a href="#daily" class="scroll-cue" aria-label="Scroll to today's challenge"><i class="ph-bold ph-caret-down"></i></a>
@@ -122,7 +125,7 @@
             <span class="stars" data-daily-stars aria-hidden="true"></span>
             <span data-daily-diff>Medium</span>
           </div>
-          <p class="daily-card__desc">One word. Six tries. Everyone on Earth gets the exact same puzzle today — did you get it yet?</p>
+          <p class="daily-card__desc">One word. Six tries. Everyone on Earth gets the exact same puzzle today. Did you get it yet?</p>
           <div class="daily-card__facts">
             <div><i class="ph-bold ph-clock"></i> <span data-daily-time>~2 min</span></div>
             <div><i class="ph-bold ph-fire"></i> <span data-daily-streaktext>No streak yet</span></div>
@@ -149,13 +152,13 @@
       <div class="section-head reveal-on-scroll">
         <span class="eyebrow">More Ways to Play</span>
         <h2>One board. A whole arcade.</h2>
-        <p>The daily grid is just the start — jump into a practice round or a completely different word game any time.</p>
+        <p>The daily grid is just the start. Jump into a practice round or a completely different word game any time.</p>
       </div>
       <div class="game-grid reveal-on-scroll">
         <article class="game-card">
           <div class="game-card__icon"><i class="ph-fill ph-calendar-check"></i></div>
           <h3>Daily Word</h3>
-          <p>The main event — one shared puzzle, six tries, a new word at midnight.</p>
+          <p>The main event, one shared puzzle, six tries, a new word at midnight.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 160 XP</span></div>
           <div class="game-card__actions">
             <button type="button" class="btn btn--ghost btn--sm" data-howto="daily"><i class="ph-bold ph-question"></i> How to Play</button>
@@ -165,7 +168,7 @@
         <article class="game-card">
           <div class="game-card__icon"><i class="ph-fill ph-arrows-clockwise"></i></div>
           <h3>Six Tries</h3>
-          <p>The classic Wordle-style format, unlimited practice — a fresh word every round.</p>
+          <p>The classic Wordle-style format, unlimited practice, a fresh word every round.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 100 XP</span></div>
           <div class="game-card__actions">
             <button type="button" class="btn btn--ghost btn--sm" data-howto="six-tries"><i class="ph-bold ph-question"></i> How to Play</button>
@@ -218,7 +221,7 @@
         <article class="game-card game-card--mini game-card--speed">
           <div class="game-card__icon"><i class="ph-fill ph-lightning"></i></div>
           <h3>Speed Word</h3>
-          <p>Solve before the countdown hits zero — three lives, then it's game over.</p>
+          <p>Solve before the countdown hits zero. Three lives, then it's game over.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★★★</span><span><i class="ph-bold ph-clock"></i> 12 sec / word</span><span><i class="ph-bold ph-sparkle"></i> +20 XP / word</span></div>
           <div class="game-card__actions">
             <button type="button" class="btn btn--ghost btn--sm" data-howto="speed-word"><i class="ph-bold ph-question"></i> How to Play</button>
@@ -238,7 +241,7 @@
         <article class="game-card game-card--mini game-card--rush">
           <div class="game-card__icon"><i class="ph-fill ph-brain"></i></div>
           <h3>Letter Rush</h3>
-          <p>One pool of letters, ninety seconds — find every word hiding inside it.</p>
+          <p>One pool of letters, ninety seconds. Find every word hiding inside it.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★★☆</span><span><i class="ph-bold ph-clock"></i> 90 sec</span><span><i class="ph-bold ph-sparkle"></i> +4 XP / letter</span></div>
           <div class="game-card__actions">
             <button type="button" class="btn btn--ghost btn--sm" data-howto="letter-rush"><i class="ph-bold ph-question"></i> How to Play</button>
@@ -255,7 +258,7 @@
       <div class="section-head reveal-on-scroll">
         <span class="eyebrow">Your Word Journey</span>
         <h2>Progress that actually sticks around.</h2>
-        <p>Everything here lives in this browser — play a round and watch it move.</p>
+        <p>Everything here lives in this browser. Play a round and watch it move.</p>
       </div>
 
       <div class="journey-panel reveal-on-scroll">
@@ -273,7 +276,7 @@
           <div class="journey-tile"><i class="ph-bold ph-trophy"></i><strong data-jt-best>0</strong><span>Best streak</span></div>
           <div class="journey-tile"><i class="ph-bold ph-check-circle"></i><strong data-jt-games>0</strong><span>Games played</span></div>
           <div class="journey-tile"><i class="ph-bold ph-text-aa"></i><strong data-jt-words>0</strong><span>Words solved</span></div>
-          <div class="journey-tile"><i class="ph-bold ph-percent"></i><strong data-jt-accuracy>—</strong><span>Letter accuracy</span></div>
+          <div class="journey-tile"><i class="ph-bold ph-percent"></i><strong data-jt-accuracy>N/A</strong><span>Letter accuracy</span></div>
         </div>
       </div>
 
@@ -290,7 +293,7 @@
       <div class="section-head reveal-on-scroll">
         <span class="eyebrow">Letter Intelligence</span>
         <h2>Most common letters in five-letter words.</h2>
-        <p>Real numbers pulled from the 14,855-word dictionary this site plays with — useful for your next opening guess.</p>
+        <p>Real numbers pulled from the 14,855-word dictionary this site plays with, and useful for your next opening guess.</p>
       </div>
       <div class="letter-bars reveal-on-scroll" data-letter-bars></div>
     </div>
@@ -321,7 +324,7 @@
       <div class="section-head reveal-on-scroll">
         <span class="eyebrow">Hint System</span>
         <h2>Nudge yourself forward instead.</h2>
-        <p>Spend a little XP to unlock a clue about today's word — cheaper than spoiling the whole thing.</p>
+        <p>Spend a little XP to unlock a clue about today's word, cheaper than spoiling the whole thing.</p>
       </div>
       <div class="hint-list reveal-on-scroll" data-hint-list></div>
     </div>
@@ -333,7 +336,7 @@
       <div class="section-head reveal-on-scroll">
         <span class="eyebrow">Word Tools</span>
         <h2>Five-letter word finder.</h2>
-        <p>Unscramble, find anagrams, or filter the dictionary — all client-side, all instant.</p>
+        <p>Unscramble, find anagrams, or filter the dictionary, all client-side, all instant.</p>
       </div>
       <div class="tools-panel reveal-on-scroll">
         <div class="tools-tabs" role="tablist" aria-label="Word tool mode">
@@ -364,14 +367,14 @@
             <span>Is it really free?</span>
             <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
           </button>
-          <p class="faq-answer">Every game, hint and tool on this page is free — no account, no paywall. We keep the lights on with ads, not subscriptions.</p>
+          <p class="faq-answer">Every game, hint and tool on this page is free, no account, no paywall. We keep the lights on with ads, not subscriptions.</p>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-toggle" aria-expanded="false">
             <span>Where is my progress saved?</span>
             <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
           </button>
-          <p class="faq-answer">Right in this browser (localStorage) — no sign-up required. Clearing your browser data or switching devices will start a fresh streak.</p>
+          <p class="faq-answer">Right in this browser (localStorage), no sign-up required. Clearing your browser data or switching devices will start a fresh streak.</p>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-toggle" aria-expanded="false">
@@ -385,14 +388,14 @@
             <span>When does the new word drop?</span>
             <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
           </button>
-          <p class="faq-answer">Right at midnight in your own timezone — the countdown on the Daily Challenge card is always counting down to your next puzzle.</p>
+          <p class="faq-answer">Right at midnight in your own timezone. The countdown on the Daily Challenge card is always counting down to your next puzzle.</p>
         </div>
         <div class="faq-item">
           <button type="button" class="faq-toggle" aria-expanded="false">
             <span>Are you affiliated with any other word game?</span>
             <span class="faq-sign"><i class="ph-bold ph-plus"></i></span>
           </button>
-          <p class="faq-answer">No — WordArcade is an independent word-game platform built by puzzle fans. Any resemblance to other games is just love for the genre.</p>
+          <p class="faq-answer">No, WordArcade is an independent word-game platform built by puzzle fans. Any resemblance to other games is just love for the genre.</p>
         </div>
       </div>
     </div>

@@ -26,15 +26,15 @@ window.HOW_TO_PLAY = {
       "Using a hint reduces your final reward, but never below 0.",
     ],
     tips: [
-      "Open with a word that has a lot of common letters and 2+ vowels — like CRANE or STARE.",
-      "A gray letter is only gray for that guess — it just means try a different letter next time.",
+      "Open with a word that has a lot of common letters and 2+ vowels, like CRANE or STARE.",
+      "A gray letter is only gray for that guess. It just means try a different letter next time.",
       "Don't repeat a gray letter, but do reuse yellow letters in a new position.",
     ],
     tutorial: [
       { title: "Guess a word", body: "Type any real 5-letter word and press Enter to submit your first guess." },
       { title: "Watch the tiles change color", body: "Green means correct spot, yellow means wrong spot, gray means not in the word." },
       { title: "Use the clues", body: "Build your next guess around what you just learned." },
-      { title: "Solve it before you run out", body: "You get 6 tries total — the board tracks how many are left." },
+      { title: "Solve it before you run out", body: "You get 6 tries total, the board tracks how many are left." },
       { title: "Earn your score and streak", body: "Winning banks XP and keeps your daily streak alive." },
     ],
     hints: [
@@ -47,13 +47,13 @@ window.HOW_TO_PLAY = {
 
   "six-tries": {
     title: "Six Tries", icon: "ph-arrows-clockwise", difficulty: "Medium",
-    tagline: "The classic format, unlimited practice — a fresh word every round.",
+    tagline: "The classic format, unlimited practice, a fresh word every round.",
     goal: "Guess the hidden 5-letter word within six attempts.",
     steps: [
       "Type a 5-letter word and submit it.",
       "Green = correct letter, correct spot. Yellow = correct letter, wrong spot. Gray = not in the word.",
       "Refine your guess using those clues.",
-      "Win within 6 tries — then play again with a brand-new word.",
+      "Win within 6 tries, then play again with a brand-new word.",
     ],
     example: "wordle",
     scoring: [
@@ -62,14 +62,14 @@ window.HOW_TO_PLAY = {
       "Hints reduce your final reward for that round.",
     ],
     tips: [
-      "This is unlimited practice — there's no downside to experimenting with your opener.",
+      "This is unlimited practice. There's no downside to experimenting with your opener.",
       "Try a completely different set of letters on guess two to test more of the alphabet.",
     ],
     tutorial: [
       { title: "Guess a word", body: "Type any real 5-letter word and press Enter." },
       { title: "Watch the tiles change color", body: "Green, yellow and gray tell you exactly what to do next." },
       { title: "Use the clues to improve", body: "Each guess should use everything you've learned so far." },
-      { title: "Solve it before you run out", body: "You have 6 tries — then a brand-new word is waiting." },
+      { title: "Solve it before you run out", body: "You have 6 tries, then a brand-new word is waiting." },
     ],
     hints: [
       { id: "vowels", icon: "ph-drop", label: "Vowel Check", desc: "Reveal how many vowels are in the word.", cost: 10, unit: "xp" },
@@ -84,10 +84,10 @@ window.HOW_TO_PLAY = {
     tagline: "Rearrange jumbled letters back into the correct word.",
     goal: "Unscramble the letters into a real word across 5 relaxed rounds.",
     steps: [
-      "Look at the scrambled letters — they're all real letters from the answer.",
+      "Look at the scrambled letters. They're all real letters from the answer.",
       "Tap letters in order to build your answer in the slots above.",
       "Fill every slot to check it automatically.",
-      "A wrong guess just resets the slots — tap Shuffle for a fresh look.",
+      "A wrong guess just resets the slots. Tap Shuffle for a fresh look.",
     ],
     example: "scramble",
     scoring: [
@@ -97,7 +97,7 @@ window.HOW_TO_PLAY = {
     ],
     tips: [
       "Look for common endings first, like -ING, -ER or -ED.",
-      "Isolate any vowels — most words alternate consonants and vowels.",
+      "Isolate any vowels. Most words alternate consonants and vowels.",
     ],
     tutorial: [
       { title: "Look at the scrambled letters", body: "Every tile belongs somewhere in the final word." },
@@ -119,25 +119,25 @@ window.HOW_TO_PLAY = {
     goal: "Solve as many scrambled words as possible in 60 seconds.",
     steps: [
       "A scrambled word appears with the clock already running.",
-      "Tap letters to build your answer — solving one instantly loads the next.",
+      "Tap letters to build your answer, solving one instantly loads the next.",
       "Keep going until the 60-second timer hits zero.",
       "Your final score is how many words you solved.",
     ],
     example: "timer",
     scoring: [
       "Each correct word: +15 XP.",
-      "There's no penalty for a wrong guess — the slots just reset.",
+      "There's no penalty for a wrong guess. The slots just reset.",
       "Hints cost you precious seconds instead of XP, since every second counts here.",
     ],
     tips: [
-      "Don't overthink short words — quick pattern recognition beats careful analysis.",
+      "Don't overthink short words. Quick pattern recognition beats careful analysis.",
       "If you're stuck, skip the definition hint and just try letter combinations.",
     ],
     tutorial: [
       { title: "A word challenge appears", body: "The 60-second timer starts the moment you begin." },
       { title: "Build your answer", body: "Tap the scrambled letters into the slots as fast as you can." },
       { title: "Get the next word instantly", body: "Solve one and the next scrambled word loads immediately." },
-      { title: "Beat the clock", body: "Keep solving until time runs out — every word counts." },
+      { title: "Beat the clock", body: "Keep solving until time runs out. Every word counts." },
     ],
     hints: [
       { id: "first", icon: "ph-flag", label: "First Letter", desc: "Reveal the word's first letter.", cost: 5, unit: "sec" },
@@ -147,7 +147,7 @@ window.HOW_TO_PLAY = {
 
   "speed-word": {
     title: "Speed Word", icon: "ph-lightning", difficulty: "Expert",
-    tagline: "Solve before the countdown hits zero — three lives, then it's over.",
+    tagline: "Solve before the countdown hits zero. Three lives, then it's over.",
     goal: "Unscramble each word before its individual 12-second timer expires.",
     steps: [
       "A scrambled word appears with a 12-second bar above it.",
@@ -158,17 +158,17 @@ window.HOW_TO_PLAY = {
     example: "timer",
     scoring: [
       "Each correct word: +20 XP.",
-      "Lose all 3 lives and the round ends — your score is words solved.",
+      "Lose all 3 lives and the round ends. Your score is words solved.",
     ],
     tips: [
       "Glance at the word length first to gauge how much time you'll need.",
-      "The Time Bonus hint is worth it early — a few extra seconds can save a life.",
+      "The Time Bonus hint is worth it early, a few extra seconds can save a life.",
     ],
     tutorial: [
-      { title: "A word appears", body: "You have a limited amount of time — watch the bar." },
+      { title: "A word appears", body: "You have a limited amount of time, watch the bar." },
       { title: "Type the answer", body: "Tap letters into the slots to build your guess." },
       { title: "Beat the clock", body: "The faster you solve it, the higher your score." },
-      { title: "Watch your lives", body: "Running out of time costs a life — you only get three." },
+      { title: "Watch your lives", body: "Running out of time costs a life, you only get three." },
     ],
     hints: [
       { id: "first", icon: "ph-flag", label: "First Letter", desc: "Reveal the word's first letter.", cost: 8, unit: "xp" },
@@ -180,18 +180,18 @@ window.HOW_TO_PLAY = {
 
   "letter-rush": {
     title: "Letter Rush", icon: "ph-brain", difficulty: "Hard",
-    tagline: "One pool of letters, ninety seconds — find every word hiding inside it.",
+    tagline: "One pool of letters, ninety seconds, find every word hiding inside it.",
     goal: "Build as many valid words as you can from one shared letter pool.",
     steps: [
       "You're given a pool of 8-9 letters.",
       "Tap letters in order to spell a word of 3 or more letters.",
-      "Submit it — valid words are added to your found list.",
+      "Submit it, valid words are added to your found list.",
       "Keep building new words until the 90-second timer ends.",
     ],
     example: "timer",
     scoring: [
       "3-letter word: 50 XP · 4-letter: 100 XP · 5-letter: 200 XP · 6+ letters: 300+ XP.",
-      "Longer words are always worth more — hunt for the big ones.",
+      "Longer words are always worth more, hunt for the big ones.",
     ],
     tips: [
       "Start with short, easy words to build a base score, then hunt for longer ones.",
@@ -199,9 +199,9 @@ window.HOW_TO_PLAY = {
     ],
     tutorial: [
       { title: "Look at your letter pool", body: "Every word you build must use only these letters." },
-      { title: "Build a word", body: "Tap letters in order — 3 letters minimum." },
+      { title: "Build a word", body: "Tap letters in order, 3 letters minimum." },
       { title: "Submit it", body: "A valid word joins your found list and scores points." },
-      { title: "Keep hunting", body: "Longer words score much more — find them before time runs out." },
+      { title: "Keep hunting", body: "Longer words score much more, find them before time runs out." },
     ],
     hints: [
       { id: "example", icon: "ph-lightbulb", label: "Valid Word", desc: "Reveal an example word you can still make.", cost: 15, unit: "xp" },
@@ -226,7 +226,7 @@ window.HOW_TO_PLAY = {
       "Each extra clue you reveal lowers that reward by 20 XP (minimum 20).",
     ],
     tips: [
-      "Don't reveal a clue you don't need — guess as soon as you have a strong idea.",
+      "Don't reveal a clue you don't need, guess as soon as you have a strong idea.",
       "The category clue is often the biggest shortcut.",
     ],
     tutorial: [
@@ -259,7 +259,7 @@ window.HOW_TO_PLAY = {
       "Revealing an answer instead of solving it earns no XP for that clue.",
     ],
     tips: [
-      "Shorter answers (4 letters) are usually the quickest win — start there.",
+      "Shorter answers (4 letters) are usually the quickest win, start there.",
       "Use the Check Letter hint before Reveal Letter if you just want confirmation.",
     ],
     tutorial: [

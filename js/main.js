@@ -88,14 +88,14 @@
     setText("[data-jt-games]", s.gamesCompleted);
     setText("[data-jt-words]", s.wordsSolved);
     var acc = window.PlayerState.accuracyPct();
-    setText("[data-jt-accuracy]", acc == null ? "—" : acc + "%");
+    setText("[data-jt-accuracy]", acc == null ? "N/A" : acc + "%");
 
     setText("[data-daily-streaktext]", s.streakCurrent > 0 ? s.streakCurrent + "-day streak" : "No streak yet");
     var cta = document.querySelector("[data-daily-cta]");
     if (cta) {
       var done = window.PlayerState.isDailyDoneToday();
       cta.innerHTML = done
-        ? '<i class="ph-fill ph-check-circle"></i> Completed — Play Again Tomorrow'
+        ? '<i class="ph-fill ph-check-circle"></i> Completed · Play Again Tomorrow'
         : '<i class="ph-fill ph-play"></i> Play Today';
       cta.classList.toggle("btn--done", done);
     }
@@ -226,6 +226,23 @@
       span.style.setProperty("--rot", (Math.random() * 26 - 13) + "deg");
       host.appendChild(span);
     }
+  }
+
+  /* ---------------- Hero stat tooltips (tap-to-toggle for touch) ---------------- */
+  function initHeroStatTips() {
+    var stats = document.querySelectorAll(".hero-stat[data-tip]");
+    if (!stats.length) return;
+    stats.forEach(function (stat) {
+      stat.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var wasOpen = stat.classList.contains("is-open");
+        stats.forEach(function (s) { s.classList.remove("is-open"); });
+        if (!wasOpen) stat.classList.add("is-open");
+      });
+    });
+    document.addEventListener("click", function () {
+      stats.forEach(function (s) { s.classList.remove("is-open"); });
+    });
   }
 
   /* ---------------- Hero video: pause off-screen, respect reduced motion ---------------- */
@@ -435,7 +452,7 @@
         results.innerHTML = found.length
           ? ('<p class="tools-count">' + found.length + (found.length === 60 ? "+" : "") + " match" + (found.length === 1 ? "" : "es") + "</p>" +
             '<div class="tools-chips">' + found.map(function (w) { return '<span class="tools-chip">' + w + "</span>"; }).join("") + "</div>")
-          : '<p class="tools-count">No matches found — try different letters.</p>';
+          : '<p class="tools-count">No matches found, try different letters.</p>';
       });
     });
   }
@@ -478,6 +495,7 @@
     initCountdown();
     initHeroBoard();
     initHeroParticles();
+    initHeroStatTips();
     initHeroVideo();
     renderAchievements();
     renderLetterBars();
