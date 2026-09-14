@@ -180,12 +180,16 @@ button { font: inherit; }
    ============================================================ */
 .site-header {
   position: sticky; top: 0; z-index: 60; height: var(--header-h);
-  display: flex; align-items: center; background: rgba(7, 17, 38, 0.82);
+  background: rgba(7, 17, 38, 0.82);
   backdrop-filter: blur(14px); border-bottom: 1px solid transparent;
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .site-header.is-scrolled { border-color: var(--paper-line); box-shadow: var(--shadow-sm); }
-.site-header__inner { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 20px; }
+/* .site-header itself is a plain block: .site-header__inner owns the row
+   layout for the bar, and .mobile-panel (a sibling, not a flex child of
+   the bar) stacks below it in normal flow instead of squeezing into
+   the same row when it opens. */
+.site-header__inner { width: 100%; height: 100%; max-width: 1180px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; display: flex; align-items: center; gap: 20px; }
 
 .brand { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
 .brand__mark { height: 34px; width: auto; }
@@ -373,15 +377,15 @@ button { font: inherit; }
 .wg-message--win { color: var(--brand); }
 .wg-message--lose { color: var(--coral); }
 
-.wg-keyboard { display: flex; flex-direction: column; gap: 8px; max-width: 480px; margin: 14px auto 0; }
-.wg-key-row { display: flex; justify-content: center; gap: 6px; }
+.wg-keyboard { display: flex; flex-direction: column; gap: 8px; max-width: 480px; width: 100%; margin: 14px auto 0; box-sizing: border-box; }
+.wg-key-row { display: flex; justify-content: center; gap: clamp(3px, 1.2vw, 6px); width: 100%; }
 .wg-key {
-  min-width: 32px; height: 46px; padding: 0 8px; border: none; border-radius: 8px; background: var(--paper-line-soft);
-  color: var(--ink); font-weight: 700; font-size: 13px; cursor: pointer; text-transform: uppercase; flex: 1; max-width: 42px;
+  min-width: 0; height: 46px; padding: 0 clamp(2px, 1.5vw, 8px); border: none; border-radius: 8px; background: var(--paper-line-soft);
+  color: var(--ink); font-weight: 700; font-size: clamp(11px, 3vw, 13px); cursor: pointer; text-transform: uppercase; flex: 1 1 0; max-width: 42px;
   transition: background 120ms ease, transform 120ms ease;
 }
 .wg-key:active { transform: scale(0.94); }
-.wg-key--wide { max-width: 64px; font-size: 11px; flex: 1.6; }
+.wg-key--wide { max-width: 64px; font-size: clamp(9px, 2.4vw, 11px); flex: 1.6 1 0; }
 .wg-key--correct { background: var(--tile-correct); color: #fff; }
 .wg-key--present { background: var(--tile-present); color: #fff; }
 .wg-key--absent { background: #334155; color: #94A3B8; }
@@ -556,8 +560,8 @@ button { font: inherit; }
 .tools-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .tools-tab { background: var(--paper-line-soft); border: none; border-radius: 999px; padding: 9px 16px; font-weight: 600; font-size: 13.5px; color: var(--ink-soft); cursor: pointer; }
 .tools-tab.is-active { background: var(--ink); color: var(--paper-raised); }
-.tools-form { display: flex; gap: 10px; }
-.tools-input { flex: 1; border: 1px solid var(--paper-line); border-radius: 12px; padding: 12px 16px; font-size: 15px; font-family: var(--font-mono); text-transform: uppercase; background: var(--paper); color: var(--ink); }
+.tools-form { display: flex; flex-wrap: wrap; gap: 10px; }
+.tools-input { flex: 1 1 160px; min-width: 0; box-sizing: border-box; border: 1px solid var(--paper-line); border-radius: 12px; padding: 12px 16px; font-size: 15px; font-family: var(--font-mono); text-transform: uppercase; background: var(--paper); color: var(--ink); }
 .tools-input:focus { border-color: var(--brand); }
 .tools-results { margin-top: 18px; min-height: 30px; }
 .tools-count { font-size: 13px; color: var(--ink-faint); margin: 0 0 10px; }
@@ -666,8 +670,8 @@ button { font: inherit; }
 .guessword-clues { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .guessword-clues li { display: flex; gap: 10px; align-items: flex-start; background: var(--paper-raised); border: 1px solid var(--paper-line); border-radius: 10px; padding: 10px 14px; font-size: 14.5px; }
 .guessword-clue-num { font-family: var(--font-mono); font-size: 12px; color: var(--brand); font-weight: 700; }
-.guessword-form { display: flex; gap: 10px; margin-top: 6px; }
-.guessword-input { flex: 1; border: 1px solid var(--paper-line); border-radius: 12px; padding: 12px 14px; font-size: 15px; text-transform: uppercase; font-family: var(--font-mono); background: var(--paper); color: var(--ink); }
+.guessword-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.guessword-input { flex: 1 1 140px; min-width: 0; border: 1px solid var(--paper-line); border-radius: 12px; padding: 12px 14px; font-size: 15px; text-transform: uppercase; font-family: var(--font-mono); background: var(--paper); color: var(--ink); box-sizing: border-box; }
 .guessword-input:focus { border-color: var(--brand); }
 .guessword-feedback { min-height: 20px; color: var(--coral); font-size: 13.5px; margin: 8px 0 0; text-align: center; }
 
