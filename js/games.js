@@ -3,6 +3,11 @@
    Every "Play" button on the page routes through GameModal.open,
    which hands a clean container to one of the launch functions
    below. Nothing here ever navigates away from the page.
+
+   Each game is gated behind window.HowToPlay.gate() so a first-
+   time player sees the onboarding overlay before anything (a
+   timer included) actually starts, and every modal gets a
+   persistent "?" button wired to that game's full instructions.
    ============================================================ */
 (function () {
   "use strict";
@@ -25,6 +30,10 @@
       '<div class="game-modal__panel">' +
       '  <div class="game-modal__head">' +
       '    <span class="game-modal__title"></span>' +
+      '    <span class="game-modal__spacer"></span>' +
+      '    <button type="button" class="game-modal__help" data-modal-help hidden aria-label="How to play">' +
+      '      <i class="ph-bold ph-question"></i>' +
+      "    </button>" +
       '    <button type="button" class="game-modal__close" aria-label="Close game">' +
       '      <i class="ph-bold ph-x"></i>' +
       "    </button>" +
@@ -49,7 +58,7 @@
     if (lastFocused && lastFocused.focus) lastFocused.focus();
   }
 
-  function openModal(title, launchFn) {
+  function openModal(title, launchFn, gameId) {
     var root = ensureModal();
     lastFocused = document.activeElement;
     root.querySelector(".game-modal__title").textContent = title;
@@ -57,6 +66,7 @@
     body.innerHTML = "";
     root.classList.add("is-open");
     document.body.classList.add("modal-open");
+    if (gameId && window.HowToPlay) window.HowToPlay.attachHelpButton(root, gameId);
     activeCleanup = launchFn(body, closeModal) || null;
     var closeBtn = root.querySelector(".game-modal__close");
     if (closeBtn) closeBtn.focus();
@@ -73,7 +83,9 @@
       '<h3 class="game-result__title">' + opts.title + "</h3>" +
       '<p class="game-result__subtitle">' + (opts.subtitle || "") + "</p>" +
       (opts.xp != null ? '<div class="game-result__xp">+' + opts.xp + " XP</div>" : "") +
+      (opts.statsHtml || "") +
       (opts.extraHtml || "") +
+      (opts.breakdownHtml || "") +
       '<div class="game-result__actions">' +
       (opts.onPlayAgain ? '<button type="button" class="btn btn--primary" data-act="again">Play Again</button>' : "") +
       '<button type="button" class="btn btn--ghost" data-act="close">Back to Games</button>' +
@@ -81,6 +93,19 @@
     container.appendChild(panel);
     if (opts.onPlayAgain) panel.querySelector('[data-act="again"]').addEventListener("click", opts.onPlayAgain);
     panel.querySelector('[data-act="close"]').addEventListener("click", closeModal);
+    var speakBtn = panel.querySelector("[data-speak]");
+    if (speakBtn) {
+      if ("speechSynthesis" in window) {
+        speakBtn.addEventListener("click", function () {
+          try {
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(speakBtn.getAttribute("data-speak")));
+          } catch (e) {}
+        });
+      } else {
+        speakBtn.hidden = true;
+      }
+    }
     if (!opts.skipConfetti) window.Effects.confetti(panel.querySelector(".game-result__icon"));
     return panel;
   }
@@ -90,6 +115,54 @@
     if (!el) return;
     var r = el.getBoundingClientRect();
     window.Effects.xpToast(amount, r.left + r.width / 2, r.top);
+  }
+
+  /* ---------------- "How you did" + "Word breakdown" (post-game learning) ---------------- */
+  function howYouDidHtml(stats) {
+    return (
+      '<div class="result-stats">' +
+      '<div class="result-stat"><i class="ph-bold ph-percent"></i><strong>' + stats.accuracy + '</strong><span>Accuracy</span></div>' +
+      '<div class="result-stat"><i class="ph-bold ph-timer"></i><strong>' + stats.time + '</strong><span>Speed</span></div>' +
+      '<div class="result-stat"><i class="ph-bold ph-target"></i><strong>' + stats.efficiency + '</strong><span>Efficiency</span></div>' +
+      '<div class="result-stat"><i class="ph-bold ph-lightbulb"></i><strong>' + stats.hints + '</strong><span>Hints used</span></div>' +
+      "</div>"
+    );
+  }
+
+  function relatedWords(word) {
+    var list = window.WordBank.list();
+    if (!list.length) return [];
+    var sameStart = list.filter(function (w) { return w !== word && w[0] === word[0]; });
+    var pool = sameStart.length >= 4 ? sameStart : list.filter(function (w) { return w !== word; });
+    var picks = [];
+    var used = {};
+    while (picks.length < 4 && picks.length < pool.length) {
+      var w = pool[Math.floor(Math.random() * pool.length)];
+      if (!used[w]) { used[w] = true; picks.push(w); }
+    }
+    return picks;
+  }
+
+  function wordBreakdownHtml(entry) {
+    var ex = entry.ex ? entry.ex.replace("___", "<strong>" + entry.word + "</strong>") : "";
+    var related = relatedWords(entry.word);
+    return (
+      '<div class="result-breakdown">' +
+      '<h4><i class="ph-bold ph-book-open"></i> Word Breakdown</h4>' +
+      '<div class="result-breakdown__word">' + entry.word +
+      '<button type="button" class="result-speak-btn" data-speak="' + entry.word + '" aria-label="Hear pronunciation"><i class="ph-fill ph-speaker-high"></i></button>' +
+      "</div>" +
+      "<p>" + entry.def + "</p>" +
+      (ex ? "<p><em>“" + ex + "”</em></p>" : "") +
+      (entry.cat ? '<p class="result-breakdown__cat"><i class="ph-bold ph-shapes"></i> ' + entry.cat + "</p>" : "") +
+      (related.length ? '<div class="result-related"><span>Related words:</span>' + related.map(function (w) { return '<span class="tools-chip">' + w + "</span>"; }).join("") + "</div>" : "") +
+      "</div>"
+    );
+  }
+
+  function fmtTime(sec) {
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + String(s).padStart(2, "0");
   }
 
   /* ============================================================
@@ -107,29 +180,69 @@
 
   function launchWordleFamily(container, opts) {
     var entry = opts.entry;
+    var hintCfg = window.HOW_TO_PLAY[opts.gameId];
+
     var intro = document.createElement("div");
     intro.className = "wg-intro";
     intro.innerHTML =
       '<div class="wg-intro__badge">' + opts.badge + '</div>' +
-      '<p class="wg-intro__hint">Guess the ' + entry.word.length + '-letter word in ' + opts.maxTries + ' tries. Difficulty: <strong>' + entry.diff + "</strong></p>";
+      '<p class="wg-intro__hint">Guess the ' + entry.word.length + '-letter word in ' + opts.maxTries + " tries. " + window.Utils.diffChipHtml(entry.diff) + "</p>";
     container.appendChild(intro);
+
+    var hintHost = document.createElement("div");
+    container.appendChild(hintHost);
 
     var boardWrap = document.createElement("div");
     container.appendChild(boardWrap);
 
-    var hintsUsedThisRound = false;
+    var revealedLetterIdx = null;
+    var hintPanel = window.HintPanel.create(hintHost, {
+      hints: hintCfg.hints,
+      sequential: true,
+      getSpendable: function () { return window.PlayerState.get().xp; },
+      use: function (hint) {
+        if (hint.id === "vowels") {
+          var n = entry.word.split("").filter(function (c) { return "AEIOU".indexOf(c) !== -1; }).length;
+          window.PlayerState.addXp(-hint.cost, "hint");
+          return { text: "This word contains " + n + " vowel" + (n === 1 ? "" : "s") + "." };
+        }
+        if (hint.id === "letter") {
+          if (revealedLetterIdx == null) revealedLetterIdx = Math.floor(Math.random() * entry.word.length);
+          var pattern = entry.word.split("").map(function (ch, i) { return i === revealedLetterIdx ? ch : "_"; }).join(" ");
+          window.PlayerState.addXp(-hint.cost, "hint");
+          return { text: pattern };
+        }
+        if (hint.id === "category") {
+          window.PlayerState.addXp(-hint.cost, "hint");
+          return { text: entry.cat };
+        }
+        if (hint.id === "first") {
+          window.PlayerState.addXp(-hint.cost, "hint");
+          return { text: "Starts with “" + entry.word[0] + "”" };
+        }
+        return null;
+      },
+    });
+    window.HintPanel.attachImStuck(hintHost, hintPanel);
+
+    var correctLetters = 0, totalLetters = 0;
     var game = new window.WordleGame({
       container: boardWrap,
       answer: entry.word,
       maxTries: opts.maxTries,
       reducedMotion: reduced,
-      onGuessRow: function (correct, total) { window.PlayerState.recordGuessRow(correct, total); },
+      onGuessRow: function (correct, total) {
+        window.PlayerState.recordGuessRow(correct, total);
+        correctLetters += correct;
+        totalLetters += total;
+      },
       onWin: function (info) {
         var bonus = (info.maxTries - info.tries) * 10;
         var xp = opts.baseXp + bonus;
+        var hintsUsed = hintPanel.usedCount() > 0;
         window.PlayerState.recordWin({
           tries: info.tries, maxTries: info.maxTries, timeSec: info.timeSec,
-          hintsUsed: hintsUsedThisRound, isDaily: !!opts.isDaily,
+          hintsUsed: hintsUsed, isDaily: !!opts.isDaily,
         });
         window.PlayerState.addXp(xp, opts.badge);
         setTimeout(function () {
@@ -138,7 +251,13 @@
             title: opts.isDaily ? "Daily word solved!" : "Solved it!",
             subtitle: "You got <strong>" + entry.word + "</strong> in " + info.tries + " " + (info.tries === 1 ? "try" : "tries") + ".",
             xp: xp,
-            extraHtml: '<p class="game-result__def">' + entry.def + "</p>",
+            statsHtml: howYouDidHtml({
+              accuracy: totalLetters ? Math.round((correctLetters / totalLetters) * 100) + "%" : "—",
+              time: fmtTime(info.timeSec),
+              efficiency: info.tries + "/" + info.maxTries,
+              hints: hintPanel.usedCount() + "/" + hintCfg.hints.length,
+            }),
+            breakdownHtml: wordBreakdownHtml(entry),
             onPlayAgain: opts.isDaily ? null : function () { relaunch(); },
           });
         }, 700);
@@ -149,7 +268,7 @@
             icon: "ph-hourglass-low",
             title: "So close!",
             subtitle: "The word was <strong>" + info.answer + "</strong>.",
-            extraHtml: '<p class="game-result__def">' + entry.def + "</p>",
+            breakdownHtml: wordBreakdownHtml(entry),
             skipConfetti: true,
             onPlayAgain: function () { relaunch(); },
           });
@@ -159,11 +278,9 @@
 
     function relaunch() {
       if (opts.isDaily) {
-        // Retry the same daily word with a fresh board.
-        window.GameModal.open(opts.title, function (c) { return launchWordleFamily(c, opts); });
+        window.GameModal.open(opts.title, function (c) { return launchWordleFamily(c, opts); }, opts.gameId);
       } else {
-        // Practice modes get a brand-new random word each round.
-        window.GameModal.open(opts.title, launchSixTries);
+        window.GameModal.open(opts.title, launchSixTries, "six-tries");
       }
     }
 
@@ -184,7 +301,7 @@
       return;
     }
     return launchWordleFamily(container, {
-      entry: entry, maxTries: 6, isDaily: true, baseXp: 100,
+      entry: entry, maxTries: 6, isDaily: true, baseXp: 100, gameId: "daily",
       badge: '<i class="ph-fill ph-calendar-check"></i> Today\'s Challenge', title: "Daily Word",
     });
   }
@@ -192,7 +309,7 @@
   function launchSixTries(container) {
     var entry = pickRandomAnswer();
     return launchWordleFamily(container, {
-      entry: entry, maxTries: 6, isDaily: false, baseXp: 40,
+      entry: entry, maxTries: 6, isDaily: false, baseXp: 40, gameId: "six-tries",
       badge: '<i class="ph-fill ph-arrows-clockwise"></i> Practice Round', title: "Six Tries",
     });
   }
@@ -213,7 +330,13 @@
     return shuffled;
   }
 
+  function modeToGameId(mode) {
+    return mode === "scramble" ? "word-scramble" : (mode === "blitz" ? "blitz" : "speed-word");
+  }
+
   function launchScramble(container, mode) {
+    var gameId = modeToGameId(mode);
+    var hintCfg = window.HOW_TO_PLAY[gameId];
     var pool = window.SCRAMBLE_WORDS.slice();
     var order = pool.sort(function () { return Math.random() - 0.5; });
     var roundIndex = 0;
@@ -236,7 +359,7 @@
         subtitle: "You solved <strong>" + solved + "</strong> word" + (solved === 1 ? "" : "s") + ".",
         xp: totalXp,
         onPlayAgain: function () {
-          window.GameModal.open(document.querySelector(".game-modal__title").textContent, function (c) { return launchScramble(c, mode); });
+          window.GameModal.open(document.querySelector(".game-modal__title").textContent, function (c) { return launchScramble(c, mode); }, gameId);
         },
       });
     }
@@ -252,6 +375,7 @@
       var scrambled = shuffleWord(item.word);
       var slots = new Array(item.word.length).fill(null);
       var usedSourceIdx = {};
+      var lengthRevealed = mode !== "scramble"; // only Word Scramble hides length behind a hint
 
       wrap.innerHTML =
         '<div class="scramble-top">' +
@@ -259,16 +383,18 @@
         (timeLeft != null ? '<span class="scramble-timer"><i class="ph-fill ph-timer"></i> <span data-time>' + timeLeft + "s</span></span>" : "") +
         (mode === "speed" ? '<span class="scramble-lives">' + "❤️".repeat(lives) + "</span>" : "") +
         "</div>" +
-        '<div class="scramble-cat">' + item.cat + " · " + item.word.length + " letters</div>" +
+        '<div class="scramble-cat" data-cat-line>' + item.cat + (lengthRevealed ? " · " + item.word.length + " letters" : "") + "</div>" +
         '<div class="scramble-slots" data-slots></div>' +
         '<div class="scramble-source" data-source></div>' +
         '<div class="scramble-actions">' +
         '  <button type="button" class="btn btn--ghost btn--sm" data-clear>Clear</button>' +
         '  <button type="button" class="btn btn--ghost btn--sm" data-shuffle>Shuffle</button>' +
-        "</div>";
+        "</div>" +
+        '<div data-hint-host></div>';
 
       var slotsEl = wrap.querySelector("[data-slots]");
       var sourceEl = wrap.querySelector("[data-source]");
+      var catLine = wrap.querySelector("[data-cat-line]");
 
       function renderSlots() {
         slotsEl.innerHTML = "";
@@ -300,9 +426,11 @@
         });
       }
 
+      var roundOver = false;
       function checkAnswer(letters) {
         var guess = slots.join("");
         if (guess === item.word) {
+          roundOver = true;
           solved += 1;
           var xp = mode === "speed" ? 20 : (mode === "blitz" ? 15 : 20);
           totalXp += xp;
@@ -338,6 +466,62 @@
         var again = shuffleWord(item.word);
         renderSource(again);
       });
+
+      var hintPanel = window.HintPanel.create(wrap.querySelector("[data-hint-host]"), {
+        hints: hintCfg.hints,
+        sequential: false,
+        getSpendable: function (unit) { return unit === "sec" ? timeLeft : window.PlayerState.get().xp; },
+        use: function (hint) {
+          if (roundOver) return null;
+          if (hint.id === "first") {
+            spendHintCost(hint);
+            return { text: "Starts with “" + item.word[0] + "”" };
+          }
+          if (hint.id === "length") {
+            lengthRevealed = true;
+            catLine.textContent = item.cat + " · " + item.word.length + " letters";
+            spendHintCost(hint);
+            return { text: "It's a " + item.word.length + "-letter word." };
+          }
+          if (hint.id === "definition") {
+            spendHintCost(hint);
+            return { text: item.def || "A word worth knowing." };
+          }
+          if (hint.id === "placement") {
+            var emptyIdx = slots.indexOf(null);
+            if (emptyIdx === -1) return null;
+            spendHintCost(hint);
+            return { text: "Try “" + item.word[emptyIdx] + "” in the next open slot." };
+          }
+          if (hint.id === "time") {
+            timeLeft += 5;
+            updateTimerDisplay();
+            spendHintCost(hint);
+            return { text: "+5 seconds added to the clock!" };
+          }
+          if (hint.id === "next") {
+            var idx2 = slots.indexOf(null);
+            if (idx2 === -1) return null;
+            var needed = item.word[idx2];
+            var tiles = sourceEl.querySelectorAll(".scramble-tile:not(.is-used)");
+            for (var k = 0; k < tiles.length; k++) {
+              if (tiles[k].textContent === needed) {
+                tiles[k].classList.add("scramble-tile--pulse");
+                setTimeout(function (el) { el.classList.remove("scramble-tile--pulse"); }, 1600, tiles[k]);
+                break;
+              }
+            }
+            spendHintCost(hint);
+            return { text: "Look for the highlighted tile." };
+          }
+          return null;
+        },
+      });
+      function spendHintCost(hint) {
+        if (hint.unit === "sec") { timeLeft = Math.max(1, timeLeft - hint.cost); updateTimerDisplay(); }
+        else window.PlayerState.addXp(-hint.cost, "hint");
+      }
+      window.HintPanel.attachImStuck(wrap, hintPanel);
 
       if (timeLeft != null) {
         timeLeft = mode === "blitz" ? timeLeft : 12;
@@ -376,6 +560,7 @@
      Letter Rush
      ============================================================ */
   function launchLetterRush(container) {
+    var hintCfg = window.HOW_TO_PLAY["letter-rush"];
     var seed = window.LETTER_RUSH_SEEDS[Math.floor(Math.random() * window.LETTER_RUSH_SEEDS.length)];
     var letters = seed.split("").sort(function () { return Math.random() - 0.5; });
     var found = [];
@@ -398,7 +583,8 @@
       '  <button type="button" class="btn btn--primary btn--sm" data-submit>Submit Word</button>' +
       '  <button type="button" class="btn btn--ghost btn--sm" data-clear>Clear</button>' +
       "</div>" +
-      '<div class="letterrush-found" data-found></div>';
+      '<div class="letterrush-found" data-found></div>' +
+      '<div data-hint-host></div>';
     container.appendChild(wrap);
 
     var poolEl = wrap.querySelector("[data-pool]");
@@ -463,7 +649,43 @@
     wrap.querySelector("[data-submit]").addEventListener("click", submit);
     wrap.querySelector("[data-clear]").addEventListener("click", resetCurrent);
 
-    window.WordBank.load();
+    window.WordBank.load().then(function () {
+      var hintPanel = window.HintPanel.create(wrap.querySelector("[data-hint-host]"), {
+        hints: hintCfg.hints,
+        sequential: false,
+        getSpendable: function () { return window.PlayerState.get().xp; },
+        use: function (hint) {
+          var candidates = window.WordBank.list().filter(function (w) {
+            return w.length >= 3 && w.length <= seed.length && found.indexOf(w) === -1 && window.WordBank.canBuildFrom(w, seed);
+          });
+          if (!candidates.length) return null;
+          var pick = candidates[Math.floor(Math.random() * candidates.length)];
+          if (hint.id === "example") {
+            window.PlayerState.addXp(-hint.cost, "hint");
+            return { text: "Try building “" + pick + "”." };
+          }
+          if (hint.id === "start") {
+            var startLetter = pick[0];
+            var tiles = poolEl.querySelectorAll(".scramble-tile:not(.is-used)");
+            for (var i = 0; i < tiles.length; i++) {
+              if (tiles[i].textContent === startLetter) {
+                tiles[i].classList.add("scramble-tile--pulse");
+                setTimeout(function (el) { el.classList.remove("scramble-tile--pulse"); }, 1600, tiles[i]);
+                break;
+              }
+            }
+            window.PlayerState.addXp(-hint.cost, "hint");
+            return { text: "Try starting with “" + startLetter + "”." };
+          }
+          if (hint.id === "length") {
+            window.PlayerState.addXp(-hint.cost, "hint");
+            return { text: "There's a " + pick.length + "-letter word hiding in here." };
+          }
+          return null;
+        },
+      });
+      window.HintPanel.attachImStuck(wrap, hintPanel);
+    });
     renderPool();
     renderCurrent();
 
@@ -478,7 +700,8 @@
           title: "Time's up!",
           subtitle: "You found <strong>" + found.length + "</strong> word" + (found.length === 1 ? "" : "s") + " from " + seed.toUpperCase() + ".",
           xp: score,
-          onPlayAgain: function () { window.GameModal.open("Letter Rush", launchLetterRush); },
+          extraHtml: found.length ? '<div class="letterrush-found letterrush-found--recap">' + found.map(function (w) { return '<span class="letterrush-chip">' + w + "</span>"; }).join("") + "</div>" : "",
+          onPlayAgain: function () { window.GameModal.open("Letter Rush", launchLetterRush, "letter-rush"); },
         });
       }
     }, 1000);
@@ -490,65 +713,76 @@
      Guess the Word — progressive clues
      ============================================================ */
   function launchGuessWord(container) {
+    var hintCfg = window.HOW_TO_PLAY["guess-word"];
     var entry = pickRandomAnswer();
-    var vowels = entry.word.split("").filter(function (c) { return "AEIOU".indexOf(c) !== -1; }).length;
-    var clues = [
-      entry.word.length + " letters, " + vowels + " vowel" + (vowels === 1 ? "" : "s"),
-      "Starts with “" + entry.word[0] + "”",
-      "Difficulty: " + entry.diff,
-      entry.def,
-    ];
-    var revealed = 1;
-    var score = 100;
     var attempts = 0;
 
     var wrap = document.createElement("div");
     wrap.className = "guessword-game";
+    wrap.innerHTML =
+      '<div class="guessword-score">Potential reward: <strong>' + (40 + hintCfg.hints.length * 15) + " XP</strong></div>" +
+      '<div class="guessword-clue0"><span class="guessword-clue-num">★</span>' + entry.word.length + " letters" + "</div>" +
+      '<div data-hint-host></div>' +
+      '<form class="guessword-form" data-form>' +
+      '  <input type="text" class="guessword-input" data-input placeholder="Type your guess…" autocomplete="off" maxlength="' + entry.word.length + '" aria-label="Your guess">' +
+      '  <button type="submit" class="btn btn--primary">Guess</button>' +
+      "</form>" +
+      '<p class="guessword-feedback" data-feedback aria-live="polite"></p>';
     container.appendChild(wrap);
 
-    function render() {
-      wrap.innerHTML =
-        '<div class="guessword-score">Potential reward: <strong>' + score + " XP</strong></div>" +
-        '<ul class="guessword-clues">' +
-        clues.slice(0, revealed).map(function (c, i) { return '<li><span class="guessword-clue-num">' + (i + 1) + "</span>" + c + "</li>"; }).join("") +
-        "</ul>" +
-        (revealed < clues.length ? '<button type="button" class="btn btn--ghost btn--sm" data-more><i class="ph-fill ph-lightbulb"></i> Reveal next clue (−20 XP)</button>' : "") +
-        '<form class="guessword-form" data-form>' +
-        '  <input type="text" class="guessword-input" data-input placeholder="Type your guess…" autocomplete="off" maxlength="' + entry.word.length + '" aria-label="Your guess">' +
-        '  <button type="submit" class="btn btn--primary">Guess</button>' +
-        "</form>" +
-        '<p class="guessword-feedback" data-feedback aria-live="polite"></p>';
-
-      var moreBtn = wrap.querySelector("[data-more]");
-      if (moreBtn) moreBtn.addEventListener("click", function () {
-        revealed += 1;
-        score = Math.max(20, score - 20);
-        render();
-      });
-      wrap.querySelector("[data-form]").addEventListener("submit", function (e) {
-        e.preventDefault();
-        var input = wrap.querySelector("[data-input]");
-        var guess = input.value.trim().toUpperCase();
-        attempts += 1;
-        if (guess === entry.word) {
-          window.PlayerState.addXp(score, "guess-word");
-          window.PlayerState.recordWin({ tries: attempts, hintsUsed: revealed > 1 });
-          resultPanel(container, {
-            icon: "ph-trophy",
-            title: "Nailed it!",
-            subtitle: "The word was <strong>" + entry.word + "</strong>.",
-            xp: score,
-            onPlayAgain: function () { window.GameModal.open("Guess the Word", launchGuessWord); },
-          });
-        } else {
-          var fb = wrap.querySelector("[data-feedback]");
-          fb.textContent = "Not quite — try again or reveal another clue.";
-          input.value = "";
-          input.focus();
-        }
-      });
+    function updateScore() {
+      var bonus = (hintCfg.hints.length - hintPanel.usedCount()) * 15;
+      var el = wrap.querySelector(".guessword-score strong");
+      if (el) el.textContent = (40 + bonus) + " XP";
     }
-    render();
+
+    var hintPanel = window.HintPanel.create(wrap.querySelector("[data-hint-host]"), {
+      hints: hintCfg.hints,
+      sequential: false,
+      getSpendable: function () { return window.PlayerState.get().xp; },
+      use: function (hint) {
+        var text = null;
+        if (hint.id === "category") text = entry.cat;
+        if (hint.id === "first") text = "Starts with “" + entry.word[0] + "”";
+        if (hint.id === "example") text = entry.ex ? entry.ex.replace("___", "_____") : null;
+        if (hint.id === "definition") text = entry.def;
+        if (!text) return null;
+        window.PlayerState.addXp(-hint.cost, "hint");
+        setTimeout(updateScore, 0);
+        return { text: text };
+      },
+    });
+    window.HintPanel.attachImStuck(wrap, hintPanel);
+
+    wrap.querySelector("[data-form]").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = wrap.querySelector("[data-input]");
+      var guess = input.value.trim().toUpperCase();
+      attempts += 1;
+      if (guess === entry.word) {
+        var bonus = (hintCfg.hints.length - hintPanel.usedCount()) * 15;
+        var xp = 40 + bonus;
+        window.PlayerState.addXp(xp, "guess-word");
+        window.PlayerState.recordWin({ tries: attempts, hintsUsed: hintPanel.usedCount() > 0 });
+        resultPanel(container, {
+          icon: "ph-trophy",
+          title: "Nailed it!",
+          subtitle: "The word was <strong>" + entry.word + "</strong>.",
+          xp: xp,
+          statsHtml: howYouDidHtml({
+            accuracy: "—", time: "—", efficiency: attempts + " guess" + (attempts === 1 ? "" : "es"),
+            hints: hintPanel.usedCount() + "/" + hintCfg.hints.length,
+          }),
+          breakdownHtml: wordBreakdownHtml(entry),
+          onPlayAgain: function () { window.GameModal.open("Guess the Word", launchGuessWord, "guess-word"); },
+        });
+      } else {
+        var fb = wrap.querySelector("[data-feedback]");
+        fb.textContent = "Not quite — try again or reveal a hint.";
+        input.value = "";
+        input.focus();
+      }
+    });
   }
 
   /* ============================================================
@@ -557,27 +791,33 @@
      ============================================================ */
   function launchMiniCrossword(container) {
     var clues = window.MINI_CROSSWORD;
+    var hintCfg = window.HOW_TO_PLAY["mini-crossword"];
     var solvedCount = 0;
+    var recap = [];
 
     var wrap = document.createElement("div");
     wrap.className = "minicross-game";
-    wrap.innerHTML = '<p class="minicross-intro">Type each answer, or reveal it if you\'re stuck.</p><div class="minicross-list" data-list></div>';
+    wrap.innerHTML = '<p class="minicross-intro">Type each answer, or use a hint if you\'re stuck.</p><div class="minicross-list" data-list></div>';
     container.appendChild(wrap);
     var list = wrap.querySelector("[data-list]");
 
-    clues.forEach(function (item, idx) {
+    clues.forEach(function (item) {
       var row = document.createElement("div");
       row.className = "minicross-row";
+      var hintButtonsHtml = hintCfg.hints.map(function (h) {
+        return '<button type="button" class="minicross-hint-btn" data-mc-hint="' + h.id + '" title="' + h.label + " (−" + h.cost + " XP)\"><i class=\"ph-bold " + h.icon + '"></i></button>';
+      }).join("");
       row.innerHTML =
         '<div class="minicross-num">' + item.num + "</div>" +
         '<div class="minicross-body">' +
-        '  <div class="minicross-clue">' + item.clue + "</div>" +
+        '  <div class="minicross-clue" data-clue-text>' + item.clue + "</div>" +
         '  <div class="minicross-boxes" data-boxes></div>' +
-        "</div>" +
-        '<button type="button" class="btn btn--ghost btn--sm minicross-reveal" data-reveal>Reveal</button>';
+        '  <div class="minicross-hints">' + hintButtonsHtml + "</div>" +
+        "</div>";
       list.appendChild(row);
 
       var boxesEl = row.querySelector("[data-boxes]");
+      var clueTextEl = row.querySelector("[data-clue-text]");
       var inputs = [];
       item.answer.split("").forEach(function (_, i) {
         var input = document.createElement("input");
@@ -597,10 +837,13 @@
         boxesEl.appendChild(input);
       });
 
+      function spend(cost) { window.PlayerState.addXp(-cost, "hint"); }
+
       function lockRow(revealedOnly) {
         inputs.forEach(function (inp) { inp.disabled = true; });
         row.classList.add("is-solved");
-        row.querySelector("[data-reveal]").remove();
+        row.querySelector(".minicross-hints").remove();
+        recap.push({ num: item.num, clue: item.clue, answer: item.answer, solvedByPlayer: !revealedOnly });
         if (!revealedOnly) {
           solvedCount += 1;
           window.PlayerState.addXp(15, "mini-crossword");
@@ -621,9 +864,40 @@
         }
       }
 
-      row.querySelector("[data-reveal]").addEventListener("click", function () {
-        item.answer.split("").forEach(function (ch, i) { inputs[i].value = ch; });
-        lockRow(true);
+      row.querySelectorAll("[data-mc-hint]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-mc-hint");
+          var hint = hintCfg.hints.filter(function (h) { return h.id === id; })[0];
+          if (window.PlayerState.get().xp < hint.cost) {
+            btn.classList.add("is-shake");
+            setTimeout(function () { btn.classList.remove("is-shake"); }, 400);
+            return;
+          }
+          if (id === "reveal-letter") {
+            var emptyIdx = -1;
+            for (var i = 0; i < inputs.length; i++) { if (!inputs[i].value) { emptyIdx = i; break; } }
+            if (emptyIdx === -1) return;
+            spend(hint.cost);
+            inputs[emptyIdx].value = item.answer[emptyIdx];
+            if (inputs[emptyIdx + 1]) inputs[emptyIdx + 1].focus();
+            checkRow();
+          } else if (id === "check-letter") {
+            spend(hint.cost);
+            inputs.forEach(function (inp, i) {
+              if (!inp.value) return;
+              inp.classList.remove("is-check-correct", "is-check-wrong");
+              inp.classList.add(inp.value === item.answer[i] ? "is-check-correct" : "is-check-wrong");
+              setTimeout(function () { inp.classList.remove("is-check-correct", "is-check-wrong"); }, 1400);
+            });
+          } else if (id === "easy-clue") {
+            spend(hint.cost);
+            clueTextEl.textContent = item.easyClue || item.clue;
+          } else if (id === "reveal-word") {
+            spend(hint.cost);
+            item.answer.split("").forEach(function (ch, i) { inputs[i].value = ch; });
+            lockRow(true);
+          }
+        });
       });
     });
 
@@ -632,12 +906,19 @@
     finishBar.innerHTML = '<button type="button" class="btn btn--primary" data-done>Finish</button>';
     wrap.appendChild(finishBar);
     finishBar.querySelector("[data-done]").addEventListener("click", function () {
+      var recapHtml = '<div class="result-breakdown"><h4><i class="ph-bold ph-grid-nine"></i> Answer Recap</h4>' +
+        clues.map(function (item) {
+          var found = recap.filter(function (r) { return r.num === item.num; })[0];
+          var solved = found && found.solvedByPlayer;
+          return '<p><strong>' + item.num + " " + item.answer + "</strong> — " + item.clue + (solved ? "" : " <em>(revealed)</em>") + "</p>";
+        }).join("") + "</div>";
       resultPanel(container, {
         icon: "ph-trophy",
         title: "Mini crossword wrapped up",
         subtitle: "You solved " + solvedCount + " of " + clues.length + " clues yourself.",
         xp: solvedCount * 15,
-        onPlayAgain: function () { window.GameModal.open("Mini Crossword", launchMiniCrossword); },
+        breakdownHtml: recapHtml,
+        onPlayAgain: function () { window.GameModal.open("Mini Crossword", launchMiniCrossword, "mini-crossword"); },
       });
     });
   }
@@ -658,7 +939,9 @@
     launch: function (id) {
       var entry = REGISTRY[id];
       if (!entry) return;
-      window.GameModal.open(entry.title, entry.fn);
+      window.GameModal.open(entry.title, function (body, close) {
+        return window.HowToPlay.gate(id, body, function () { return entry.fn(body, close); });
+      }, id);
     },
   };
 
@@ -667,5 +950,12 @@
     if (!trigger) return;
     e.preventDefault();
     window.Games.launch(trigger.getAttribute("data-play"));
+  });
+
+  document.addEventListener("click", function (e) {
+    var trigger = e.target.closest("[data-howto]");
+    if (!trigger) return;
+    e.preventDefault();
+    window.HowToPlay.open(trigger.getAttribute("data-howto"));
   });
 })();

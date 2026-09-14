@@ -15,11 +15,7 @@
   function puzzleNumber() {
     return Math.max(1, Math.floor((Date.now() - SITE_EPOCH.getTime()) / 86400000) + 1);
   }
-  function diffStars(diff) {
-    var map = { Easy: 2, Medium: 3, Tricky: 4, Hard: 5 };
-    var n = map[diff] || 3;
-    return "★".repeat(n) + "☆".repeat(5 - n);
-  }
+  function diffStars(diff) { return window.Utils.diffStars(diff); }
   function diffTime(diff) {
     var map = { Easy: "~1 min", Medium: "~2 min", Tricky: "~3 min", Hard: "~4 min" };
     return map[diff] || "~2 min";
@@ -46,6 +42,16 @@
       header.classList.toggle("is-scrolled", window.scrollY > 12);
       lastY = window.scrollY;
     }, { passive: true });
+
+    var howToBtn = document.getElementById("how-to-play-btn");
+    if (howToBtn) howToBtn.addEventListener("click", function () { window.HowToPlay.openHub(); });
+    var howToMobile = document.getElementById("how-to-play-link-mobile");
+    if (howToMobile) howToMobile.addEventListener("click", function (e) {
+      e.preventDefault();
+      panel.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      window.HowToPlay.openHub();
+    });
   }
 
   /* ---------------- Today badge ---------------- */

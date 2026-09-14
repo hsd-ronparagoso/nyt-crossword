@@ -71,15 +71,33 @@
     showNextToast();
   }
 
-  function xpToast(amount, x, y) {
+  function xpToast(amount, x, y, unit) {
     if (prefersReducedMotion()) return;
     var el = document.createElement("span");
     el.className = "xp-float";
-    el.textContent = (amount >= 0 ? "+" : "") + amount + " XP";
+    var label = unit === "sec" ? "s" : " XP";
+    el.textContent = (amount >= 0 ? "+" : "") + amount + label;
     el.style.left = x + "px";
     el.style.top = y + "px";
     document.body.appendChild(el);
     setTimeout(function () { el.remove(); }, 1000);
+  }
+
+  function animateCount(el, to, opts) {
+    opts = opts || {};
+    var from = parseInt((el.textContent || "0").replace(/[^\d-]/g, ""), 10) || 0;
+    if (prefersReducedMotion() || from === to) { el.textContent = (opts.prefix || "") + to + (opts.suffix || ""); return; }
+    var duration = opts.duration || 500;
+    var start = null;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / duration);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var val = Math.round(from + (to - from) * eased);
+      el.textContent = (opts.prefix || "") + val + (opts.suffix || "");
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
 
   window.Effects = {
@@ -87,6 +105,7 @@
     confetti: confetti,
     achievementToast: achievementToast,
     xpToast: xpToast,
+    animateCount: animateCount,
   };
 
   if (window.PlayerState) {

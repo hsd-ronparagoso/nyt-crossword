@@ -34,6 +34,7 @@
       <span class="chip chip--streak" data-streak-chip><i class="ph-fill ph-fire"></i> <span data-streak-val>0</span></span>
       <span class="chip chip--xp" data-xp-chip><i class="ph-fill ph-sparkle"></i> <span data-xp-val>0</span> XP</span>
       <span class="chip chip--level" data-level-chip title="Your level"><span data-level-val>1</span></span>
+      <button type="button" class="icon-btn" id="how-to-play-btn" aria-label="How to play"><i class="ph-bold ph-question"></i></button>
     </div>
     <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="mobile-panel" aria-label="Open menu">
       <i class="ph-bold ph-list"></i>
@@ -43,6 +44,7 @@
     <a href="#play">Play</a>
     <a href="#mini-games">Mini Games</a>
     <a href="#daily">Daily Challenge</a>
+    <a href="#" id="how-to-play-link-mobile"><i class="ph-bold ph-question"></i> How to Play</a>
     <a href="#stats">Letter Stats</a>
     <a href="#achievements">Achievements</a>
     <a href="#tools">Word Tools</a>
@@ -155,28 +157,40 @@
           <h3>Daily Word</h3>
           <p>The main event — one shared puzzle, six tries, a new word at midnight.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 160 XP</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="daily">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="daily"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="daily">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card">
           <div class="game-card__icon"><i class="ph-fill ph-arrows-clockwise"></i></div>
           <h3>Six Tries</h3>
           <p>The classic Wordle-style format, unlimited practice — a fresh word every round.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 2 min</span><span><i class="ph-bold ph-sparkle"></i> up to 100 XP</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="six-tries">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="six-tries"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="six-tries">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card">
           <div class="game-card__icon"><i class="ph-fill ph-grid-nine"></i></div>
           <h3>Mini Crossword</h3>
           <p>Five quick clues, one satisfying little grid. Type them out or peek if you're stuck.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★☆☆☆</span><span><i class="ph-bold ph-clock"></i> 3 min</span><span><i class="ph-bold ph-sparkle"></i> up to 75 XP</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="mini-crossword">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="mini-crossword"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="mini-crossword">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card">
           <div class="game-card__icon"><i class="ph-fill ph-magnifying-glass"></i></div>
           <h3>Guess the Word</h3>
           <p>Clues unlock one at a time. The fewer you need, the bigger the reward.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★☆☆</span><span><i class="ph-bold ph-clock"></i> 1 min</span><span><i class="ph-bold ph-sparkle"></i> up to 100 XP</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="guess-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="guess-word"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="guess-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
       </div>
     </div>
@@ -196,28 +210,40 @@
           <h3>Blitz</h3>
           <p>Unscramble as many words as you can before the 60-second clock runs out.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★★☆</span><span><i class="ph-bold ph-clock"></i> 60 sec</span><span><i class="ph-bold ph-sparkle"></i> +15 XP / word</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="blitz">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="blitz"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="blitz">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card game-card--mini game-card--speed">
           <div class="game-card__icon"><i class="ph-fill ph-lightning"></i></div>
           <h3>Speed Word</h3>
           <p>Solve before the countdown hits zero — three lives, then it's game over.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★★★</span><span><i class="ph-bold ph-clock"></i> 12 sec / word</span><span><i class="ph-bold ph-sparkle"></i> +20 XP / word</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="speed-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="speed-word"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="speed-word">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card game-card--mini game-card--scramble">
           <div class="game-card__icon"><i class="ph-fill ph-shuffle"></i></div>
           <h3>Word Scramble</h3>
           <p>Tap the jumbled letters back into order across five relaxed rounds.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★☆☆☆</span><span><i class="ph-bold ph-clock"></i> 3 min</span><span><i class="ph-bold ph-sparkle"></i> +20 XP / word</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="word-scramble">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="word-scramble"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="word-scramble">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
         <article class="game-card game-card--mini game-card--rush">
           <div class="game-card__icon"><i class="ph-fill ph-brain"></i></div>
           <h3>Letter Rush</h3>
           <p>One pool of letters, ninety seconds — find every word hiding inside it.</p>
           <div class="game-card__meta"><span class="stars stars--sm">★★★★☆</span><span><i class="ph-bold ph-clock"></i> 90 sec</span><span><i class="ph-bold ph-sparkle"></i> +4 XP / letter</span></div>
-          <button type="button" class="btn btn--primary btn--block" data-play="letter-rush">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          <div class="game-card__actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-howto="letter-rush"><i class="ph-bold ph-question"></i> How to Play</button>
+            <button type="button" class="btn btn--primary" data-play="letter-rush">Play Now <i class="ph-bold ph-arrow-right"></i></button>
+          </div>
         </article>
       </div>
     </div>
@@ -406,10 +432,14 @@
 </footer>
 
 <script src="data/game-data.js"></script>
+<script src="data/how-to-play.js"></script>
 <script src="js/state.js"></script>
 <script src="js/words.js"></script>
+<script src="js/utils.js"></script>
 <script src="js/effects.js"></script>
 <script src="js/wordle-engine.js"></script>
+<script src="js/hints.js"></script>
+<script src="js/howtoplay.js"></script>
 <script src="js/games.js"></script>
 <script src="js/main.js"></script>
 </body>
